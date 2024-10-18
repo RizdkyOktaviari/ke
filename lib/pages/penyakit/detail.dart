@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../main.dart';
 import 'penyakit_list.dart';
 
 class DetailPage extends StatelessWidget {
@@ -12,7 +11,7 @@ class DetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(pengetahuan.title),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -21,7 +20,10 @@ class DetailPage extends StatelessWidget {
           children: [
             Text(
               pengetahuan.title,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.redAccent),
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent),
             ),
             SizedBox(height: 20),
             Text(

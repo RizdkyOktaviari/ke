@@ -26,7 +26,8 @@ class RegisterPage extends StatelessWidget {
                       children: [
                         SizedBox(height: 20),
                         IconButton(
-                          icon: Icon(Icons.arrow_back, color: Colors.redAccent),
+                          icon:
+                              Icon(Icons.arrow_back, color: Colors.blueAccent),
                           onPressed: () {
                             Navigator.pop(context);
                           },
@@ -37,7 +38,7 @@ class RegisterPage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
-                            color: Colors.redAccent,
+                            color: Colors.blueAccent,
                           ),
                         ),
                         SizedBox(height: 10),
@@ -52,12 +53,12 @@ class RegisterPage extends StatelessWidget {
                         TextField(
                           decoration: InputDecoration(
                             labelText: 'Full Name',
-                            labelStyle: TextStyle(color: Colors.redAccent),
+                            labelStyle: TextStyle(color: Colors.blueAccent),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                             border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                           ),
                         ),
@@ -65,12 +66,12 @@ class RegisterPage extends StatelessWidget {
                         TextField(
                           decoration: InputDecoration(
                             labelText: 'Email',
-                            labelStyle: TextStyle(color: Colors.redAccent),
+                            labelStyle: TextStyle(color: Colors.blueAccent),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                             border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                           ),
                         ),
@@ -79,12 +80,12 @@ class RegisterPage extends StatelessWidget {
                           obscureText: true,
                           decoration: InputDecoration(
                             labelText: 'Password',
-                            labelStyle: TextStyle(color: Colors.redAccent),
+                            labelStyle: TextStyle(color: Colors.blueAccent),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                             border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                           ),
                         ),
@@ -93,12 +94,12 @@ class RegisterPage extends StatelessWidget {
                           obscureText: true,
                           decoration: InputDecoration(
                             labelText: 'Confirm Password',
-                            labelStyle: TextStyle(color: Colors.redAccent),
+                            labelStyle: TextStyle(color: Colors.blueAccent),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                             border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                           ),
                         ),
@@ -108,7 +109,7 @@ class RegisterPage extends StatelessWidget {
                           height: 50,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.redAccent,
+                              backgroundColor: Colors.blueAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),

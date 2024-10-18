@@ -15,7 +15,11 @@ class _ExercisePageState extends State<ExercisePage> {
   double caloriesBurned = 0;
   String selectedExercise = 'Rowing Machine (Intense)';
 
-  final List<String> exercises = ['Rowing Machine (Intense)', 'Running', 'Cycling'];
+  final List<String> exercises = [
+    'Rowing Machine (Intense)',
+    'Running',
+    'Cycling'
+  ];
 
   void _calculateCalories() {
     // Placeholder formula to calculate calories
@@ -29,7 +33,7 @@ class _ExercisePageState extends State<ExercisePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Exercise'),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -85,14 +89,17 @@ class _ExercisePageState extends State<ExercisePage> {
             ElevatedButton(
               onPressed: () {
                 _calculateCalories();
-                widget.onExerciseAdded(caloriesBurned); // Pass calories back to the parent
+                widget.onExerciseAdded(
+                    caloriesBurned); // Pass calories back to the parent
                 Navigator.pop(context); // Go back to the previous screen
               },
               child: Text('Calculate and Add'),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
             ),
             SizedBox(height: 20),
-            Text('Calories Burned: $caloriesBurned kCal', style: TextStyle(fontSize: 20)),
+            Text('Calories Burned: $caloriesBurned kCal',
+                style: TextStyle(fontSize: 20)),
           ],
         ),
       ),

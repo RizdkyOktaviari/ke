@@ -1,36 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:kesehatan_mobile/constants/text_style.dart';
+import 'package:kesehatan_mobile/helpers/providers/local_provider.dart';
+import 'package:kesehatan_mobile/pages/auth/login.dart';
+import 'package:kesehatan_mobile/pages/food_log.dart';
+import 'package:kesehatan_mobile/pages/penyakit/penyakit_list.dart';
+import 'package:kesehatan_mobile/pages/reminder/reminder.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'login/login.dart';
-import 'penyakit/detail.dart';
-import 'penyakit/penyakit_list.dart';
-import 'food_log.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: HomePage(),
-    );
-  }
-}
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
@@ -42,24 +27,40 @@ class _HomePageState extends State<HomePage> {
     'Snacks': 0,
   };
 
-  final GlobalKey<FoodLogPageState> _foodLogKey = GlobalKey<FoodLogPageState>(); // Create a GlobalKey to access FoodLogPage
+  final GlobalKey<FoodLogPageState> _foodLogKey =
+      GlobalKey<FoodLogPageState>(); // Create a GlobalKey to access FoodLogPage
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title:
             // make center title
-            Center(
-          child: Text(
-            'Log',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-            ),
-          ),
+            Text(
+          'Log',
+          style: AppTextStyles.headline6,
         ),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.blueAccent,
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (String languageCode) {
+              context
+                  .read<LocaleProvider>()
+                  .toggleLocale(); // Change the locale
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'en',
+                child: Text('English'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'id',
+                child: Text('Indonesian'),
+              ),
+            ],
+          ),
+        ],
       ),
       drawer: Drawer(
         child: Column(
@@ -69,9 +70,9 @@ class _HomePageState extends State<HomePage> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: <Widget>[
-                  DrawerHeader(
+                  const DrawerHeader(
                     decoration: BoxDecoration(
-                      color: Colors.redAccent,
+                      color: Colors.blueAccent,
                     ),
                     child: Text(
                       'Menu Penyakit',
@@ -98,11 +99,25 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
+                  // listtile to setting reminder
+                  ListTile(
+                    leading: Icon(Icons.notifications),
+                    title: Text('Pengingat'),
+                    onTap: () {
+                      // Navigasi ke ReminderPage
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ReminderPage(),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
             ListTile(
-              leading: Icon(Icons.exit_to_app, color: Colors.redAccent),
+              leading: Icon(Icons.exit_to_app, color: Colors.blueAccent),
               title: Text('Exit'),
               onTap: () {
                 showDialog(
@@ -173,21 +188,23 @@ class _HomePageState extends State<HomePage> {
               titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
               leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
               rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white),
-              decoration: BoxDecoration(color: Colors.redAccent),
+              decoration: BoxDecoration(color: Colors.blueAccent),
             ),
             calendarStyle: CalendarStyle(
               todayDecoration: BoxDecoration(
-                color: Colors.redAccent.withOpacity(0.3),
+                color: Colors.blueAccent.withOpacity(0.3),
                 shape: BoxShape.circle,
               ),
               selectedDecoration: BoxDecoration(
-                color: Colors.redAccent,
+                color: Colors.blueAccent,
                 shape: BoxShape.circle,
               ),
             ),
           ),
           Expanded(
-            child: FoodLogPage(key: _foodLogKey, foodEntries: foodEntries), // Add key to access state
+            child: FoodLogPage(
+                key: _foodLogKey,
+                foodEntries: foodEntries), // Add key to access state
           ),
         ],
       ),

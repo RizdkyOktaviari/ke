@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kesehatan_mobile/pages/main.dart';
+import 'package:kesehatan_mobile/constants/box.dart';
+import 'package:kesehatan_mobile/constants/text_style.dart';
+import 'package:kesehatan_mobile/helpers/app_localizations.dart';
+import 'package:kesehatan_mobile/pages/home/home.dart' as home;
 import 'register.dart';
-import '../main.dart';
+import 'package:provider/provider.dart';
+import 'package:kesehatan_mobile/helpers/providers/local_provider.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -26,34 +30,30 @@ class LoginPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 20),
-                        SizedBox(height: 40),
+                        AppSizeBox.height20,
+                        AppSizeBox.height40,
                         Text(
-                          'Welcome Back!',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.redAccent,
-                          ),
+                          AppLocalizations.of(context)!.welcomeBack,
+                          style: AppTextStyles.headline4,
                         ),
-                        SizedBox(height: 10),
+                        AppSizeBox.height10,
                         Text(
-                          'Login to your account',
+                          AppLocalizations.of(context)!.loginToYourAccount,
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
                           ),
                         ),
-                        SizedBox(height: 40),
+                        AppSizeBox.height40,
                         TextField(
                           decoration: InputDecoration(
-                            labelText: 'Email',
-                            labelStyle: TextStyle(color: Colors.redAccent),
+                            labelText: AppLocalizations.of(context)!.email,
+                            labelStyle: TextStyle(color: Colors.blueAccent),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                             border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                           ),
                         ),
@@ -61,13 +61,13 @@ class LoginPage extends StatelessWidget {
                         TextField(
                           obscureText: true,
                           decoration: InputDecoration(
-                            labelText: 'Password',
-                            labelStyle: TextStyle(color: Colors.redAccent),
+                            labelText: AppLocalizations.of(context)!.password,
+                            labelStyle: TextStyle(color: Colors.blueAccent),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                             border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent),
+                              borderSide: BorderSide(color: Colors.blueAccent),
                             ),
                           ),
                         ),
@@ -75,8 +75,8 @@ class LoginPage extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            'Forgot password?',
-                            style: TextStyle(color: Colors.redAccent),
+                            AppLocalizations.of(context)!.forgotPassword,
+                            style: TextStyle(color: Colors.blueAccent),
                           ),
                         ),
                         SizedBox(height: 40),
@@ -85,20 +85,21 @@ class LoginPage extends StatelessWidget {
                           height: 50,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.redAccent,
+                              backgroundColor: Colors.blueAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
                             onPressed: () {
-                                Navigator.push(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePage()),
+                                    builder: (context) =>
+                                        const home.HomePage()),
                               );
                             },
                             child: Text(
-                              'Login',
+                              AppLocalizations.of(context)!.login,
                               style:
                                   TextStyle(fontSize: 18, color: Colors.white),
                             ),
@@ -117,7 +118,8 @@ class LoginPage extends StatelessWidget {
                               );
                             },
                             child: Text(
-                              'Don’t have an account? Sign Up',
+                              AppLocalizations.of(context)!
+                                  .dontHaveAnAccountSignUp,
                               style: TextStyle(
                                 color: Colors.grey[600],
                                 decoration: TextDecoration.underline,
@@ -126,6 +128,28 @@ class LoginPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 20),
+                        // change language button id|en, not pop up
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                context
+                                    .read<LocaleProvider>()
+                                    .setLocaleByCode('id');
+                              },
+                              child: Text('ID'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                context
+                                    .read<LocaleProvider>()
+                                    .setLocaleByCode('en');
+                              },
+                              child: Text('EN'),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),

@@ -17,7 +17,7 @@ class _NotesPageState extends State<NotesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notes'),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -42,7 +42,8 @@ class _NotesPageState extends State<NotesPage> {
                 Navigator.pop(context);
               },
               child: Text('Add Note'),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
             ),
           ],
         ),

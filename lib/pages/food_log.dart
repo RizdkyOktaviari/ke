@@ -118,7 +118,7 @@ class FoodLogPageState extends State<FoodLogPage> {
       child: ListTile(
         title: Text(
           mealType,
-          style: TextStyle(fontSize: 20, color: Colors.redAccent),
+          style: TextStyle(fontSize: 20, color: Colors.blueAccent),
         ),
         subtitle: Text('${widget.foodEntries[mealType]} kcal'),
         trailing: IconButton(
@@ -137,7 +137,7 @@ class FoodLogPageState extends State<FoodLogPage> {
       child: ListTile(
         title: Text(
           'Total Calories Consumed',
-          style: TextStyle(fontSize: 20, color: Colors.redAccent),
+          style: TextStyle(fontSize: 20, color: Colors.blueAccent),
         ),
         subtitle: Text('$totalCalories kcal'),
       ),

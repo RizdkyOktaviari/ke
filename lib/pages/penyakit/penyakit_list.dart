@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'detail.dart';
+
 class PenyakitListPage extends StatelessWidget {
   final List<Pengetahuan> pengetahuanList = [
     Pengetahuan(
@@ -8,11 +9,13 @@ class PenyakitListPage extends StatelessWidget {
     ),
     Pengetahuan(
       title: 'Diabetes',
-      description: 'Diabetes adalah penyakit kronis yang ditandai oleh kadar gula darah tinggi...',
+      description:
+          'Diabetes adalah penyakit kronis yang ditandai oleh kadar gula darah tinggi...',
     ),
     Pengetahuan(
       title: 'Kolesterol Tinggi',
-      description: 'Kolesterol tinggi dapat menyebabkan berbagai masalah kesehatan serius...',
+      description:
+          'Kolesterol tinggi dapat menyebabkan berbagai masalah kesehatan serius...',
     ),
   ];
 
@@ -21,7 +24,7 @@ class PenyakitListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Penyakit'),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.blueAccent,
       ),
       body: ListView.builder(
         padding: EdgeInsets.all(16.0),
@@ -33,14 +36,15 @@ class PenyakitListPage extends StatelessWidget {
             child: ListTile(
               title: Text(
                 pengetahuanList[index].title,
-                style: TextStyle(fontSize: 20, color: Colors.redAccent),
+                style: TextStyle(fontSize: 20, color: Colors.blueAccent),
               ),
               subtitle: Text(pengetahuanList[index].description),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DetailPage(pengetahuan: pengetahuanList[index]),
+                    builder: (context) =>
+                        DetailPage(pengetahuan: pengetahuanList[index]),
                   ),
                 );
               },

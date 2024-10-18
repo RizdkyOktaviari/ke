@@ -17,7 +17,7 @@ class _WaterPageState extends State<WaterPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Water Intake'),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -43,7 +43,8 @@ class _WaterPageState extends State<WaterPage> {
                 Navigator.pop(context);
               },
               child: Text('Add Water Intake'),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
             ),
           ],
         ),
