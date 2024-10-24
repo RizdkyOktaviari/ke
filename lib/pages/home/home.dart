@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:kesehatan_mobile/constants/text_style.dart';
 import 'package:kesehatan_mobile/helpers/providers/local_provider.dart';
 import 'package:kesehatan_mobile/pages/auth/login.dart';
+import 'package:kesehatan_mobile/pages/chat/chat.dart';
 import 'package:kesehatan_mobile/pages/food_log.dart';
+import 'package:kesehatan_mobile/pages/manage/manage.dart';
+import 'package:kesehatan_mobile/pages/obat/obat.dart';
 import 'package:kesehatan_mobile/pages/penyakit/penyakit_list.dart';
+import 'package:kesehatan_mobile/pages/recap/recap.dart';
+import 'package:kesehatan_mobile/pages/recipe/recipe.dart';
 import 'package:kesehatan_mobile/pages/reminder/reminder.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:provider/provider.dart';
@@ -97,8 +102,121 @@ class HomePageState extends State<HomePage> {
                           );
                         },
                       ),
+                      ListTile(
+                        title: Text('Manajemen Diri'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PenyakitListPage(),
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
+                  ExpansionTile(
+                    leading: Icon(Icons.book_online_sharp),
+                    title: Text('Pengetahuan'),
+                    children: <Widget>[
+                      ListTile(
+                        title: Text('Hipertensi'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PenyakitListPage(),
+                            ),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        title: Text('Manajemen Diri'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PenyakitListPage(),
+                            ),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        title: Text('Dash'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PenyakitListPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+
+                  ListTile(
+                    leading: Icon(Icons.rice_bowl_sharp),
+                    title: Text('Recipe'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RecipePage(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.restaurant_sharp),
+                    title: Text('Manage'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ManagePage(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.list_alt_sharp),
+                    title: Text('Rekapan'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RecapListPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.medication_liquid_sharp),
+                    title: Text('Obat'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ObatPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.chat_bubble_sharp),
+                    title: Text('Chat'),
+                    onTap: () {
+                      // Navigasi ke ReminderPage
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ChatPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  //
                   // listtile to setting reminder
                   ListTile(
                     leading: Icon(Icons.notifications),

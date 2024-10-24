@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kesehatan_mobile/pages/other/blood.dart';
 import 'penyakit/search_food.dart';
 import 'other/exercise.dart';
 import 'other/notes.dart';
@@ -17,6 +18,7 @@ class FoodLogPageState extends State<FoodLogPage> {
   double totalCalories = 0;
   double totalExerciseCalories = 0;
   double totalWater = 0;
+  double totalBlood = 0;
   String notes = '';
 
   void reset() {
@@ -77,6 +79,11 @@ class FoodLogPageState extends State<FoodLogPage> {
         ),
       ),
     );
+  }
+
+  void _addBloodPressure() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => BloodPressurePage()));
   }
 
   void _addNoteEntry() {
@@ -153,6 +160,7 @@ class FoodLogPageState extends State<FoodLogPage> {
         _buildOtherItem(
             'Exercise', '$totalExerciseCalories kCal', _addExerciseEntry),
         _buildOtherItem('Water', '$totalWater oz', _addWaterEntry),
+        _buildOtherItem('Blood Pressure', '$totalBlood', _addBloodPressure),
         _buildOtherItem(
             'Notes', notes.isEmpty ? 'No notes yet' : notes, _addNoteEntry),
       ],
