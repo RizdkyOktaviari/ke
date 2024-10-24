@@ -17,32 +17,42 @@ class _ObatPageState extends State<ObatPage> {
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Medicine'),
+        title: Text('Daftar Obat'),
         backgroundColor: Colors.blue,
       ),
       body: ListView(
         children: [
-          ObatCard(
+          MedicineCard(
             imageUrl:
-                'https://cdn.hellosehat.com/wp-content/uploads/2019/03/salad-sayur.jpg',
-            title: 'Paracetamol',
-            portion: '1 Porsi | 2 Bahan',
-            fat: 1,
-            carbs: 52,
-            protein: 11,
-            calories: 266,
-            sodium: 47,
+                'https://lifepack.id/wp-content/uploads/2020/06/Paracetamol-768x512.jpg',
+            name: 'Paracetamol',
+            type: 'Tablet',
+            dosage: '500 mg',
+            usage: 'Diminum 3x sehari',
+            description: 'Obat untuk meredakan nyeri dan menurunkan demam',
+            indications: ['Demam', 'Nyeri kepala', 'Nyeri otot'],
+            warnings: [
+              'Jangan melebihi dosis yang dianjurkan',
+              'Hindari penggunaan jangka panjang'
+            ],
           ),
-          ObatCard(
+          MedicineCard(
             imageUrl:
-                'https://cdn.hellosehat.com/wp-content/uploads/2019/03/salad-sayur.jpg',
-            title: 'Asam Afenamat',
-            portion: '2 Porsi | 2 Bahan',
-            fat: 20,
-            carbs: 200,
-            protein: 50,
-            calories: 300,
-            sodium: 80,
+                'https://lifepack.id/wp-content/uploads/2020/06/Paracetamol-768x512.jpg',
+            name: 'Amoxicillin',
+            type: 'Kapsul',
+            dosage: '500 mg',
+            usage: 'Diminum 2x sehari',
+            description: 'Antibiotik untuk mengobati infeksi bakteri',
+            indications: [
+              'Infeksi saluran pernapasan',
+              'Infeksi saluran kemih',
+              'Infeksi kulit'
+            ],
+            warnings: [
+              'Harus habiskan sesuai anjuran dokter',
+              'Jangan diminum dengan susu'
+            ],
           ),
         ],
       ),

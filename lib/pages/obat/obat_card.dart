@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
-class ObatCard extends StatelessWidget {
+class MedicineCard extends StatelessWidget {
   final String imageUrl;
-  final String title;
-  final String portion;
-  final int fat;
-  final int carbs;
-  final int protein;
-  final int calories;
-  final int sodium;
+  final String name;
+  final String type;
+  final String dosage;
+  final String usage;
+  final String description;
+  final List<String> indications;
+  final List<String> warnings;
 
-  const ObatCard({
+  const MedicineCard({
     Key? key,
     required this.imageUrl,
-    required this.title,
-    required this.portion,
-    required this.fat,
-    required this.carbs,
-    required this.protein,
-    required this.calories,
-    required this.sodium,
+    required this.name,
+    required this.type,
+    required this.dosage,
+    required this.usage,
+    required this.description,
+    required this.indications,
+    required this.warnings,
   }) : super(key: key);
 
   @override
@@ -29,39 +29,91 @@ class ObatCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(imageUrl, fit: BoxFit.cover, height: 200),
+          ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(8),
+              topRight: Radius.circular(8),
+            ),
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+              height: 200,
+              width: double.infinity,
+            ),
+          ),
           Padding(
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  name,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                Text(portion),
                 SizedBox(height: 8),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    NutritionInfo(label: 'Fat', value: '$fat g'),
-                    NutritionInfo(label: 'Carbs', value: '$carbs g'),
-                    NutritionInfo(label: 'Protein', value: '$protein g'),
-                    NutritionInfo(label: 'Cal', value: '$calories'),
+                    _buildInfoChip(type, Colors.blue),
+                    SizedBox(width: 8),
+                    _buildInfoChip(dosage, Colors.green),
                   ],
                 ),
-                SizedBox(height: 4),
-                Center(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('$sodium', style: TextStyle(color: Colors.blue)),
-                    Text(' mg', style: TextStyle(color: Colors.black)),
-                  ],
-                )),
-                Center(
-                    child:
-                        Text('Sodium', style: TextStyle(color: Colors.black))),
+                SizedBox(height: 16),
+                Text(
+                  'Aturan Pakai:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(usage),
+                SizedBox(height: 8),
+                Text(
+                  'Deskripsi:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(description),
+                SizedBox(height: 16),
+                Text(
+                  'Indikasi:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Column(
+                  children: indications
+                      .map((indication) => Padding(
+                            padding: EdgeInsets.only(left: 16, top: 4),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('• '),
+                                Expanded(child: Text(indication)),
+                              ],
+                            ),
+                          ))
+                      .toList(),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Peringatan:',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+                Column(
+                  children: warnings
+                      .map((warning) => Padding(
+                            padding: EdgeInsets.only(left: 16, top: 4),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('! ', style: TextStyle(color: Colors.red)),
+                                Expanded(
+                                    child: Text(warning,
+                                        style:
+                                            TextStyle(color: Colors.red[700]))),
+                              ],
+                            ),
+                          ))
+                      .toList(),
+                ),
               ],
             ),
           ),
@@ -69,22 +121,19 @@ class ObatCard extends StatelessWidget {
       ),
     );
   }
-}
 
-class NutritionInfo extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const NutritionInfo({Key? key, required this.label, required this.value})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(value, style: TextStyle(fontWeight: FontWeight.bold)),
-        Text(label),
-      ],
+  Widget _buildInfoChip(String label, Color color) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(color: color, fontWeight: FontWeight.bold),
+      ),
     );
   }
 }
