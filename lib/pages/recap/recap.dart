@@ -5,36 +5,40 @@ class RecapListPage extends StatelessWidget {
   final List<Map<String, dynamic>> recapData = [
     {
       'date': '24 Oktober 2024',
-      'total_calories': 1200,
-      'meals': 4,
-      'protein': 65,
-      'carbs': 150,
-      'fat': 40,
+      'total_food': {
+        'breakfast': 'Nasi Goreng',
+        'lunch': 'Gado-gado',
+        'dinner': 'Soup',
+        'snack': 'Buah',
+        'calories': 1200,
+      },
+      'total_drink': {
+        'amount': 2000,
+        'count': 8,
+      },
+      'physical_activity': {
+        'type': 'Jogging',
+        'duration': '30 menit',
+        'calories_burned': 300,
+      },
+      'blood_pressure': {
+        'systolic': 120,
+        'diastolic': 80,
+        'time': '08:00',
+      },
+      'medicines': [
+        {'name': 'Paracetamol', 'dosage': '500mg', 'time': '07:00'},
+        {'name': 'Vitamin C', 'dosage': '250mg', 'time': '19:00'},
+      ],
     },
-    {
-      'date': '23 Oktober 2024',
-      'total_calories': 1350,
-      'meals': 3,
-      'protein': 70,
-      'carbs': 160,
-      'fat': 45,
-    },
-    {
-      'date': '22 Oktober 2024',
-      'total_calories': 1180,
-      'meals': 4,
-      'protein': 60,
-      'carbs': 145,
-      'fat': 38,
-    },
-    // Tambahkan data dummy lainnya sesuai kebutuhan
+    // Data dummy lainnya dengan format yang sama
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Rekapan Nutrisi'),
+        title: Text('Rekapan Harian'),
         backgroundColor: Colors.blue,
       ),
       body: ListView.builder(
@@ -54,156 +58,98 @@ class RecapListPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          data['date'],
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                    // Tanggal
+                    Text(
+                      data['date'],
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Divider(height: 24),
+
+                    // Konsumsi Makanan
+                    _buildSection(
+                      'Catatan Makanan:',
+                      Icons.restaurant,
+                      Colors.orange,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildMealRow(
+                              'Sarapan', data['total_food']['breakfast']),
+                          _buildMealRow(
+                              'Makan Siang', data['total_food']['lunch']),
+                          _buildMealRow(
+                              'Makan Malam', data['total_food']['dinner']),
+                          _buildMealRow('Cemilan', data['total_food']['snack']),
+                          Divider(),
+                          Text(
+                            'Total Kalori: ${data['total_food']['calories']} kkal',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            '${data['meals']} meals',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
+                        ],
+                      ),
+                    ),
+
+                    // Konsumsi Minuman
+                    _buildSection(
+                      'Catatan Minum:',
+                      Icons.local_drink,
+                      Colors.blue,
+                      Text(
+                        '${data['total_drink']['amount']} ml (${data['total_drink']['count']} kali minum)',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+
+                    // Aktivitas Fisik
+                    _buildSection(
+                      'Aktivitas Fisik:',
+                      Icons.directions_run,
+                      Colors.green,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${data['physical_activity']['type']}'),
+                          Text(
+                              'Durasi: ${data['physical_activity']['duration']}'),
+                          Text(
+                              'Kalori Terbakar: ${data['physical_activity']['calories_burned']} kkal'),
+                        ],
+                      ),
+                    ),
+
+                    // Tekanan Darah
+                    _buildSection(
+                      'Tekanan Darah:',
+                      Icons.favorite,
+                      Colors.red,
+                      Text(
+                        '${data['blood_pressure']['systolic']}/${data['blood_pressure']['diastolic']} mmHg (${data['blood_pressure']['time']})',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+
+                    // Obat yang Dikonsumsi
+                    _buildSection(
+                      'Obat Dikonsumsi:',
+                      Icons.medical_services,
+                      Colors.purple,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (var medicine in data['medicines'])
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 4.0),
+                              child: Text(
+                                '${medicine['name']} ${medicine['dosage']} (${medicine['time']})',
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                'Kalori',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 12,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                '${data['total_calories']}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.orange,
-                                ),
-                              ),
-                              Text(
-                                'kkal',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                'Protein',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 12,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                '${data['protein']}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                              Text(
-                                'g',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                'Karbo',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 12,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                '${data['carbs']}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.brown,
-                                ),
-                              ),
-                              Text(
-                                'g',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                'Lemak',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 12,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                '${data['fat']}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.yellow[800],
-                                ),
-                              ),
-                              Text(
-                                'g',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+
                     SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -228,12 +174,53 @@ class RecapListPage extends StatelessWidget {
           );
         },
       ),
-      // Optional: Tambahkan floating action button untuk filter atau tambah data
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add action
-        },
-        child: Icon(Icons.filter_list),
+    );
+  }
+
+  Widget _buildSection(
+      String title, IconData icon, Color color, Widget content) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: color, size: 20),
+              SizedBox(width: 8),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 28.0, top: 4),
+            child: content,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMealRow(String label, String meal) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              label + ':',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          Expanded(child: Text(meal)),
+        ],
       ),
     );
   }
