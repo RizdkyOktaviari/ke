@@ -9,6 +9,7 @@ import 'package:kesehatan_mobile/pages/obat/obat.dart';
 import 'package:kesehatan_mobile/pages/penyakit/penyakit_list.dart';
 import 'package:kesehatan_mobile/pages/recap/recap.dart';
 import 'package:kesehatan_mobile/pages/recipe/recipe.dart';
+import 'package:kesehatan_mobile/pages/reminder/new_reminder.dart';
 import 'package:kesehatan_mobile/pages/reminder/reminder.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:provider/provider.dart';
@@ -226,7 +227,7 @@ class HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const ReminderPage(),
+                          builder: (context) => ReminderNewPage(),
                         ),
                       );
                     },

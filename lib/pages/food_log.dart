@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kesehatan_mobile/pages/other/blood.dart';
+import 'food/home_food_menu.dart';
 import 'penyakit/search_food.dart';
 import 'other/exercise.dart';
 import 'other/notes.dart';
@@ -131,11 +132,27 @@ class FoodLogPageState extends State<FoodLogPage> {
         trailing: IconButton(
           icon: Icon(Icons.add),
           onPressed: () {
-            _addFoodEntry(mealType);
+            _showMealMenu(mealType);
           },
         ),
       ),
     );
+  }
+  void _showMealMenu(String mealType) {
+    Navigator.push(
+      context,
+        MaterialPageRoute(
+        builder: (context) => MealMenuPage(
+      mealType: mealType,
+      onFoodAdded: (mealType, foodName, calories) {
+        setState(() {
+          widget.foodEntries[mealType] =
+              widget.foodEntries[mealType]! + calories;
+          totalCalories += calories;
+        });
+      },
+    ),
+    ));
   }
 
   Widget _buildSummaryCard() {
