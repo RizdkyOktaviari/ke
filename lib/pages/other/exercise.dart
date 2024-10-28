@@ -17,8 +17,12 @@ class _ExercisePageState extends State<ExercisePage> {
 
   final List<String> exercises = [
     'Rowing Machine (Intense)',
+    'Low Impact Exercise',
     'Running',
-    'Cycling'
+    'Cycling',
+    'Swimming',
+    'Walking',
+    'Other'
   ];
 
   void _calculateCalories() {
