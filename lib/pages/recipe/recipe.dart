@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kesehatan_mobile/pages/recipe/recipe_card.dart';
+import 'package:provider/provider.dart';
+
+import '../../helpers/providers/recipe_provider.dart';
 
 class RecipePage extends StatefulWidget {
   const RecipePage({super.key});
@@ -9,6 +12,13 @@ class RecipePage extends StatefulWidget {
 }
 
 class _RecipePageState extends State<RecipePage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() =>
+        Provider.of<RecipeProvider>(context, listen: false).fetchRecipes());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,31 +30,24 @@ class _RecipePageState extends State<RecipePage> {
         title: Text('Recipe'),
         backgroundColor: Colors.blue,
       ),
-      body: ListView(
-        children: [
-          RecipeCard(
-            imageUrl:
-                'https://cdn.hellosehat.com/wp-content/uploads/2019/03/salad-sayur.jpg',
-            title: 'Salat Campur',
-            portion: '1 Porsi | 2 Bahan',
-            fat: 1,
-            carbs: 52,
-            protein: 11,
-            calories: 266,
-            sodium: 47,
-          ),
-          RecipeCard(
-            imageUrl:
-                'https://cdn.hellosehat.com/wp-content/uploads/2019/03/salad-sayur.jpg',
-            title: 'Ayam Bakar Madu',
-            portion: '2 Porsi | 2 Bahan',
-            fat: 20,
-            carbs: 200,
-            protein: 50,
-            calories: 300,
-            sodium: 80,
-          ),
-        ],
+      body: Consumer<RecipeProvider>(
+        builder: (context, recipeProvider, child) {
+          if (recipeProvider.isLoading) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (recipeProvider.error.isNotEmpty) {
+            return Center(child: Text(recipeProvider.error));
+          }
+
+          return ListView.builder(
+            itemCount: recipeProvider.recipes.length,
+            itemBuilder: (context, index) {
+              final recipe = recipeProvider.recipes[index];
+              return RecipeCard(recipe: recipe);
+            },
+          );
+        },
       ),
     );
   }
