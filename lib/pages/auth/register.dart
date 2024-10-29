@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -78,7 +77,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 Expanded(
                   flex: 3,
-                  child: Container(), // Placeholder untuk switch atau input lain
+                  child:
+                      Container(), // Placeholder untuk switch atau input lain
                 ),
               ],
             ),

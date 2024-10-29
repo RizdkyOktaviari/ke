@@ -6,6 +6,9 @@ import 'package:kesehatan_mobile/pages/my_app.dart';
 import 'package:kesehatan_mobile/helpers/providers/local_provider.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 
+import 'helpers/providers/auth_provider.dart';
+import 'helpers/providers/message_provider.dart';
+
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -19,6 +22,8 @@ void main() async {
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => LocaleProvider()),
+    ChangeNotifierProvider(create: (_) => AuthProvider()),
+    ChangeNotifierProvider(create: (_) => MessageProvider()),
     ChangeNotifierProvider(
       create: (contex) => alarmprovider(),
     ),
