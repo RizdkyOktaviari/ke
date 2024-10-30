@@ -5,13 +5,15 @@ import 'package:kesehatan_mobile/pages/obat/obat_card.dart';
 import '../../helpers/providers/medicine_provider.dart';
 
 class ObatPage extends StatefulWidget {
-  const ObatPage({Key? key}) : super(key: key);
+  final bool showAddButton;
+  const ObatPage({Key? key, this.showAddButton = false}) : super(key: key);
 
   @override
   State<ObatPage> createState() => _ObatPageState();
 }
 
 class _ObatPageState extends State<ObatPage> {
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +54,8 @@ class _ObatPageState extends State<ObatPage> {
                 usage: medicine.howToUse ?? 'Cara penggunaan tidak tersedia',
                 description: medicine.description ?? 'Deskripsi tidak tersedia',
                 indications: medicine.indications?.split(',').where((s) => s.isNotEmpty).toList() ?? ['Indikasi tidak tersedia'],
+                showAddButton: widget.showAddButton,
+                medicineId: medicine.id ?? 0,
                 warnings: medicine.warnings?.split(',').where((s) => s.isNotEmpty).toList() ?? ['Peringatan tidak tersedia'],
               );
             },

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../helpers/providers/auth_provider.dart';
+import '../../helpers/providers/blood_provider.dart';
+import '../../models/blood_model.dart';
 
 class BloodPressurePage extends StatefulWidget {
   const BloodPressurePage({super.key});
@@ -8,6 +13,45 @@ class BloodPressurePage extends StatefulWidget {
 }
 
 class _BloodPressurePageState extends State<BloodPressurePage> {
+  final _systolicController = TextEditingController();
+  final _diastolicController = TextEditingController();
+
+  Future<void> _submitBloodPressure() async {
+    final systolic = int.tryParse(_systolicController.text);
+    final diastolic = int.tryParse(_diastolicController.text);
+
+    if (systolic == null || diastolic == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter valid numbers')),
+      );
+      return;
+    }
+
+    final bloodPressure = BloodPressure(
+      systolicPressure: systolic,
+      diastolicPressure: diastolic,
+    );
+
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Not authenticated')),
+      );
+      return;
+    }
+
+    final provider = Provider.of<BloodPressureProvider>(context, listen: false);
+    final success = await provider.addBloodPressure(token, bloodPressure);
+
+    if (success) {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(provider.error ?? 'Failed to save blood pressure')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,50 +60,68 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
         title: const Text('Blood Pressure'),
         backgroundColor: Colors.blueAccent,
       ),
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Check your blood pressure!",
-                style: TextStyle(fontSize: 16),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Sistolik',
+      body: Consumer<BloodPressureProvider>(
+          builder: (context, provider, child) {
+            if (provider.isLoading) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Check your blood pressure!",
+                    style: TextStyle(fontSize: 16),
                   ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Diastolik',
+                  Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: TextField(
+                      controller: _systolicController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Sistolik',
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(color: Colors.white),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                    child: TextField(
+                      controller: _diastolicController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Diastolik',
+                      ),
+                    ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent),
-                ),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: _submitBloodPressure,
+                      child: const Text(
+                        'Save',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            );
+          }
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _systolicController.dispose();
+    _diastolicController.dispose();
+    super.dispose();
   }
 }

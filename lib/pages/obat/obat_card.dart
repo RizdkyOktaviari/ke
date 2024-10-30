@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../helpers/providers/auth_provider.dart';
+import '../../helpers/providers/medicine_provider.dart';
+import '../../models/medicine_model.dart';
 
 class MedicineCard extends StatelessWidget {
   final String imageUrl;
@@ -9,6 +14,8 @@ class MedicineCard extends StatelessWidget {
   final String description;
   final List<String> indications;
   final List<String> warnings;
+  final bool showAddButton;
+  final int? medicineId;
 
   const MedicineCard({
     Key? key,
@@ -20,7 +27,38 @@ class MedicineCard extends StatelessWidget {
     required this.description,
     required this.indications,
     required this.warnings,
+    this.showAddButton = false,
+    this.medicineId,
   }) : super(key: key);
+
+  Future<void> _addMedicine(BuildContext context) async {
+    final log = MedicineLog(
+      medicineId: medicineId!,
+      quantity: 1,
+      datetime: DateTime.now().toIso8601String(),
+    );
+
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Not authenticated')),
+      );
+      return;
+    }
+
+    final provider = Provider.of<MedicineProvider>(context, listen: false);
+    final success = await provider.addMedicineLog(token, log);
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Medicine added successfully')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(provider.error ?? 'Failed to add medicine')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +84,24 @@ class MedicineCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  name,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+    if (showAddButton) // Move ADD button here
+    ElevatedButton(
+    onPressed: () => _addMedicine(context),
+    child: Text('ADD', style: TextStyle(color: Colors.white),),
+    style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue,
+    ),
+    ),
+                  ],
                 ),
+
                 SizedBox(height: 8),
                 Row(
                   children: [
@@ -108,7 +160,7 @@ class MedicineCard extends StatelessWidget {
                                 Expanded(
                                     child: Text(warning,
                                         style:
-                                            TextStyle(color: Colors.red[700]))),
+                                            TextStyle(color: Colors.red[700])))
                               ],
                             ),
                           ))

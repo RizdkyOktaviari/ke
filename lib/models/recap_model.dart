@@ -82,12 +82,21 @@ class ExerciseLog {
 }
 
 class BloodPressure {
-  // Add properties as needed
-  BloodPressure();
+  final int systolic;
+  final int diastolic;
+  final DateTime timestamp;
 
-  factory BloodPressure.fromJson(Map<String, dynamic> json) {
-    return BloodPressure();
-  }
+  BloodPressure({
+    required this.systolic,
+    required this.diastolic,
+    required this.timestamp,
+  });
+
+  factory BloodPressure.fromJson(Map<String, dynamic> json) => BloodPressure(
+    systolic: json['systolic'],
+    diastolic: json['diastolic'],
+    timestamp: DateTime.parse(json['timestamp']),
+  );
 }
 
 class MedicineLog {

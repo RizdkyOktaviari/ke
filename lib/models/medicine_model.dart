@@ -1,5 +1,5 @@
 class Medicine {
-  final String? id;
+  final int? id;
   final String? name;
   final String? type;
   final String? mass;
@@ -23,7 +23,7 @@ class Medicine {
 
   factory Medicine.fromJson(Map<String, dynamic> json) {
     return Medicine(
-      id: json['id']?.toString(),
+      id: json['id'],
       name: json['name']?.toString(),
       type: json['type']?.toString(),
       mass: json['mass']?.toString(),
@@ -34,4 +34,22 @@ class Medicine {
       imageUrl: json['image_url']?.toString(),
     );
   }
+}
+
+class MedicineLog {
+  final int medicineId;
+  final int quantity;
+  final String datetime;
+
+  MedicineLog({
+    required this.medicineId,
+    required this.quantity,
+    required this.datetime,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'medicine_id': medicineId,
+    'quantity': quantity,
+    'datetime': datetime,
+  };
 }

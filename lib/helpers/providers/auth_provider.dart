@@ -1,7 +1,8 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../models/register_model.dart';
 import '../../response/user_response.dart';
 import '../../services/auth_service.dart';
 
@@ -54,6 +55,40 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> register(RegisterData data) async {
+    try {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+
+      final response = await http.post(
+        Uri.parse('http://108.137.67.23/api/register'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data.toJson()),
+      );
+
+      final responseData = json.decode(response.body);
+
+      if (response.statusCode == 200 && responseData['status'] == true) {
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _error = responseData['message'] ?? 'Registrasi gagal';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
   Future<void> logout() async {
     _token = null;
     _user = null;

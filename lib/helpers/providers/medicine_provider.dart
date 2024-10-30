@@ -57,4 +57,38 @@ class MedicineProvider with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+  Future<bool> addMedicineLog(String token, MedicineLog log) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://108.137.67.23/api/medicine-log'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(log.toJson()),
+      );
+
+      final data = json.decode(response.body);
+      if (response.statusCode == 200 && data['status'] == true) {
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      }
+
+      _error = data['message'] ?? 'Failed to add medicine log';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
 }
