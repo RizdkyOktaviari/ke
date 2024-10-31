@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kesehatan_mobile/helpers/providers/reminder.dart';
@@ -6,6 +7,7 @@ import 'package:kesehatan_mobile/pages/my_app.dart';
 import 'package:kesehatan_mobile/helpers/providers/local_provider.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 
+import 'firebase_options.dart';
 import 'helpers/providers/auth_provider.dart';
 import 'helpers/providers/blood_provider.dart';
 import 'helpers/providers/exercise_provider.dart';
@@ -18,6 +20,7 @@ import 'helpers/providers/recap_provider.dart';
 import 'helpers/providers/recipe_provider.dart';
 import 'helpers/providers/reminder_provider.dart';
 import 'helpers/providers/water_provider.dart';
+import 'services/fcm_service.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -27,9 +30,13 @@ void main() async {
   tz.initializeTimeZones();
   flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()!
+      AndroidFlutterLocalNotificationsPlugin>()!
       .requestNotificationsPermission();
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  final notificationService = NotificationService();
+  await notificationService.initialize();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => LocaleProvider()),
     ChangeNotifierProvider(create: (_) => AuthProvider()),

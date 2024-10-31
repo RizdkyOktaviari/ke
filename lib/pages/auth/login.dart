@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:kesehatan_mobile/constants/box.dart';
 import 'package:kesehatan_mobile/constants/text_style.dart';
@@ -228,6 +229,8 @@ class _LoginPageState extends State<LoginPage> {
                                                       const home.HomePage(),
                                                 ),
                                               );
+                                              final fcmToken = await FirebaseMessaging.instance.getToken();
+                                              print('FCM Token: $fcmToken');
                                             }
                                           }
                                         },

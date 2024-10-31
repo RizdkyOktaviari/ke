@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +19,22 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isAuthenticated => _token != null;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
+  Future<String?> getFCMToken() async {
+    try {
+      await _firebaseMessaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
+      return await _firebaseMessaging.getToken();
+    } catch (e) {
+      print('Error getting FCM token: $e');
+      return null;
+    }
+  }
 
   Future<bool> login(String username, String password,
       [String? fcmToken]) async {
@@ -26,6 +42,7 @@ class AuthProvider with ChangeNotifier {
       _isLoading = true;
       _error = null;
       notifyListeners();
+      String? fcmToken = await getFCMToken();
 
       final response = await _authService.login(username, password, fcmToken);
 
@@ -37,6 +54,10 @@ class AuthProvider with ChangeNotifier {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', _token!);
         await prefs.setString('user', userToJson(_user!));
+        if (fcmToken != null) {
+          await prefs.setString('fcm_token', fcmToken);
+        }
+        print('Auth Token: $_token');
 
         _isLoading = false;
         notifyListeners();
@@ -93,8 +114,10 @@ class AuthProvider with ChangeNotifier {
     _token = null;
     _user = null;
     final prefs = await SharedPreferences.getInstance();
+
     await prefs.remove('token');
     await prefs.remove('user');
+    await prefs.remove('fcm_token');
     notifyListeners();
   }
 
