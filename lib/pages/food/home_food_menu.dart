@@ -27,6 +27,7 @@ class _MealMenuPageState extends State<MealMenuPage> {
       context,
       MaterialPageRoute(
         builder: (context) => SearchFoodPage(
+          mealType: widget.mealType,
           onFoodSelected: (foodName, calories) {
             widget.onFoodAdded(widget.mealType, foodName, calories);
             Navigator.pop(context); // Kembali ke MealMenuPage

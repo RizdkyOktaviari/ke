@@ -1,8 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ChatPage extends StatelessWidget {
+import '../../helpers/providers/auth_provider.dart';
+import '../../helpers/providers/message_provider.dart';
+import '../../models/message.dart';
+
+class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
 
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final token = context.read<AuthProvider>().token;
+      if (token != null) {
+        context.read<MessageProvider>().fetchMessages(token);
+      }
+    });
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0,
+      duration: Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,36 +60,46 @@ class ChatPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: () {},
+            onPressed: () {
+              final token = context.read<AuthProvider>().token;
+              if (token != null) {
+                context.read<MessageProvider>().fetchMessages(token);
+              }
+            },
           ),
         ],
       ),
       body: Column(
         children: [
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(16),
-              children: [
-                // Chat bubble untuk pesan dari admin (align kiri)
-                _buildAdminMessage('Halo, ada yang bisa kami bantu?'),
-                _buildAdminMessage('Silakan ajukan pertanyaan Anda'),
+            child: Consumer<MessageProvider>(
+              builder: (context, messageProvider, child) {
+                if (messageProvider.isLoading) {
+                  return Center(child: CircularProgressIndicator());
+                }
 
-                // Chat bubble untuk pesan dari user (align kanan)
-                _buildUserMessage('Saya ingin bertanya tentang fitur resep'),
-                _buildUserMessage('Apakah bisa menambahkan resep sendiri?'),
+                if (messageProvider.error != null) {
+                  return Center(child: Text(messageProvider.error!));
+                }
 
-                // Lebih banyak pesan admin
-                _buildAdminMessage(
-                    'Tentu bisa! Anda bisa menambahkan resep sendiri melalui menu tambah resep'),
-                _buildAdminMessage(
-                    'Pastikan untuk mengisi semua informasi nutrisi dengan benar ya'),
+                return ListView.builder(
+                  controller: _scrollController,
+                  padding: EdgeInsets.all(16),
+                  reverse: true,
+                  itemCount: messageProvider.messages.length,
+                  itemBuilder: (context, index) {
+                    final message = messageProvider.messages[index];
+                    final userId = context.read<AuthProvider>().user?.id;
+                    final isUserMessage = message.senderId == userId;
 
-                // Lebih banyak pesan user
-                _buildUserMessage('Baik, terima kasih informasinya!'),
-              ],
+                    return isUserMessage
+                        ? _buildUserMessage(message)
+                        : _buildAdminMessage(message);
+                  },
+                );
+              },
             ),
           ),
-          // Input area di bagian bawah
           Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -73,12 +113,9 @@ class ChatPage extends StatelessWidget {
             ),
             child: Row(
               children: [
-                IconButton(
-                  icon: Icon(Icons.attach_file),
-                  onPressed: () {},
-                ),
                 Expanded(
                   child: TextField(
+                    controller: _messageController,
                     decoration: InputDecoration(
                       hintText: 'Ketik pesan...',
                       border: OutlineInputBorder(
@@ -92,10 +129,26 @@ class ChatPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8),
-                FloatingActionButton(
-                  onPressed: () {},
-                  child: Icon(Icons.send),
-                  mini: true,
+                Consumer<MessageProvider>(
+                  builder: (context, messageProvider, child) {
+                    return FloatingActionButton(
+                      onPressed: () async {
+                        if (_messageController.text.isNotEmpty) {
+                          final token = context.read<AuthProvider>().token;
+                          if (token != null) {
+                            await messageProvider.sendMessage(
+                              token,
+                              _messageController.text,
+                            );
+                            _messageController.clear();
+                            _scrollToTop();
+                          }
+                        }
+                      },
+                      child: Icon(Icons.send),
+                      mini: true,
+                    );
+                  },
                 ),
               ],
             ),
@@ -105,16 +158,14 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-  Widget _buildUserMessage(String message) {
+  Widget _buildUserMessage(Message message) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Container(
-            constraints: BoxConstraints(
-              maxWidth: 250,
-            ),
+            constraints: BoxConstraints(maxWidth: 250),
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
               color: Colors.blue,
@@ -124,12 +175,12 @@ class ChatPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  message,
+                  message.content,
                   style: TextStyle(color: Colors.white),
                 ),
                 SizedBox(height: 4),
                 Text(
-                  '09:41',
+                  message.createdAt.substring(11, 16),
                   style: TextStyle(
                     color: Colors.white70,
                     fontSize: 12,
@@ -143,7 +194,8 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAdminMessage(String message) {
+
+  Widget _buildAdminMessage(Message message) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
@@ -161,7 +213,7 @@ class ChatPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(message),
+                Text(message.content),
                 SizedBox(height: 4),
                 Text(
                   '09:40',
@@ -177,4 +229,11 @@ class ChatPage extends StatelessWidget {
       ),
     );
   }
+  @override
+  void dispose() {
+    _messageController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
 }

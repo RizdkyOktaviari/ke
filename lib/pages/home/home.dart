@@ -10,9 +10,10 @@ import 'package:kesehatan_mobile/pages/penyakit/penyakit_list.dart';
 import 'package:kesehatan_mobile/pages/recap/recap.dart';
 import 'package:kesehatan_mobile/pages/recipe/recipe.dart';
 import 'package:kesehatan_mobile/pages/reminder/new_reminder.dart';
-import 'package:kesehatan_mobile/pages/reminder/reminder.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:provider/provider.dart';
+
+import '../../helpers/providers/food_log_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -88,40 +89,40 @@ class HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  ExpansionTile(
-                    leading: Icon(Icons.local_hospital),
-                    title: Text('Penyakit'),
-                    children: <Widget>[
-                      ListTile(
-                        title: Text('Informasi Penyakit'),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PenyakitListPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      ListTile(
-                        title: Text('Manajemen Diri'),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PenyakitListPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                  // ExpansionTile(
+                  //   leading: Icon(Icons.local_hospital),
+                  //   title: Text('Penyakit'),
+                  //   children: <Widget>[
+                  //     ListTile(
+                  //       title: Text('Informasi Penyakit'),
+                  //       onTap: () {
+                  //         Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //             builder: (context) => PenyakitListPage(),
+                  //           ),
+                  //         );
+                  //       },
+                  //     ),
+                  //     ListTile(
+                  //       title: Text('Manajemen Diri'),
+                  //       onTap: () {
+                  //         Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //             builder: (context) => PenyakitListPage(),
+                  //           ),
+                  //         );
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
                   ExpansionTile(
                     leading: Icon(Icons.book_online_sharp),
                     title: Text('Pengetahuan'),
                     children: <Widget>[
                       ListTile(
-                        title: Text('Hipertensi'),
+                        title: Text('Pengetahuan'),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -131,28 +132,39 @@ class HomePageState extends State<HomePage> {
                           );
                         },
                       ),
-                      ListTile(
-                        title: Text('Manajemen Diri'),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PenyakitListPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      ListTile(
-                        title: Text('Dash'),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PenyakitListPage(),
-                            ),
-                          );
-                        },
-                      ),
+                      // ListTile(
+                      //   title: Text('Hipertensi'),
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => PenyakitListPage(),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
+                      // ListTile(
+                      //   title: Text('Manajemen Diri'),
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => PenyakitListPage(),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
+                      // ListTile(
+                      //   title: Text('Dash'),
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => PenyakitListPage(),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
                     ],
                   ),
 
@@ -290,6 +302,8 @@ class HomePageState extends State<HomePage> {
                 // Call reset method on FoodLogPage when the day changes
                 _foodLogKey.currentState?.reset();
               });
+              Provider.of<FoodLogProvider>(context, listen: false)
+                  .setSelectedDate(selectedDay);
             },
             onFormatChanged: (format) {
               if (_calendarFormat != format) {

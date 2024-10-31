@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../helpers/providers/auth_provider.dart';
+import '../../helpers/providers/knowledge_provider.dart';
 import 'detail.dart';
 
-class PenyakitListPage extends StatelessWidget {
-  final List<Pengetahuan> pengetahuanList = [
-    Pengetahuan(
-      title: 'Hipertensi',
-      description: 'Tekanan darah tinggi adalah kondisi kronis...',
-    ),
-    Pengetahuan(
-      title: 'Diabetes',
-      description:
-          'Diabetes adalah penyakit kronis yang ditandai oleh kadar gula darah tinggi...',
-    ),
-    Pengetahuan(
-      title: 'Kolesterol Tinggi',
-      description:
-          'Kolesterol tinggi dapat menyebabkan berbagai masalah kesehatan serius...',
-    ),
-  ];
+class PenyakitListPage extends StatefulWidget {
+  @override
+  State<PenyakitListPage> createState() => _PenyakitListPageState();
+}
+
+class _PenyakitListPageState extends State<PenyakitListPage> {
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    if (token != null) {
+      await Provider.of<KnowledgeProvider>(context, listen: false)
+          .fetchKnowledge(token);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,29 +31,48 @@ class PenyakitListPage extends StatelessWidget {
         title: Text('Daftar Penyakit'),
         backgroundColor: Colors.blueAccent,
       ),
-      body: ListView.builder(
-        padding: EdgeInsets.all(16.0),
-        itemCount: pengetahuanList.length,
-        itemBuilder: (context, index) {
-          return Card(
-            elevation: 4,
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: ListTile(
-              title: Text(
-                pengetahuanList[index].title,
-                style: TextStyle(fontSize: 20, color: Colors.blueAccent),
-              ),
-              subtitle: Text(pengetahuanList[index].description),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        DetailPage(pengetahuan: pengetahuanList[index]),
+      body: Consumer<KnowledgeProvider>(
+        builder: (context, provider, child) {
+          if (provider.isLoading) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (provider.error != null) {
+            return Center(child: Text(provider.error!));
+          }
+
+          final knowledgeList = provider.knowledgeList;
+
+          return ListView.builder(
+            padding: EdgeInsets.all(16.0),
+            itemCount: knowledgeList.length,
+            itemBuilder: (context, index) {
+              final knowledge = knowledgeList[index];
+              return Card(
+                elevation: 4,
+                margin: EdgeInsets.symmetric(vertical: 10),
+                child: ListTile(
+
+                  title: Text(
+                    knowledge.title,
+                    style: TextStyle(fontSize: 20, color: Colors.blueAccent),
                   ),
-                );
-              },
-            ),
+                  subtitle: Text(
+                    knowledge.content,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailPage(knowledge: knowledge),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
           );
         },
       ),
