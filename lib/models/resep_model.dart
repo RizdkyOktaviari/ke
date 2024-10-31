@@ -31,6 +31,22 @@ class Recipe {
     this.image,
     this.imageUrl,
   });
+  // Tambahkan method toJson
+  Map<String, dynamic> toJson() {
+    return {
+      'food_name': foodName,
+      'description': description,
+      'food_type': foodType,
+      'portion': portion,
+      'calories': calories?.toString(),
+      'protein': protein?.toString(),
+      'fat': fat?.toString(),
+      'carbohydrate': carbohydrate?.toString(),
+      'sugar': sugar?.toString(),
+      'cholesterol': cholesterol?.toString(),
+      'mass': mass?.toString(),
+    };
+  }
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(

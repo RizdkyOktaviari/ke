@@ -17,17 +17,19 @@ class RecipeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(
-            recipe.imageUrl ?? 'https://via.placeholder.com/640x480',
-            fit: BoxFit.cover,
-            height: 200,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                height: 200,
-                color: Colors.grey[300],
-                child: Icon(Icons.error),
-              );
-            },
+          Center(
+            child: Image.network(
+              recipe.imageUrl ?? 'https://via.placeholder.com/640x480',
+              fit: BoxFit.cover,
+              height: 200,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 200,
+                  color: Colors.grey[300],
+                  child: Icon(Icons.error),
+                );
+              },
+            ),
           ),
           Padding(
             padding: EdgeInsets.all(8),

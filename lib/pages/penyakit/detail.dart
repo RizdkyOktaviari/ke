@@ -19,15 +19,15 @@ class DetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                knowledge.imageUrl,
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
-              ),
-            ),
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(8),
+            //   child: Image.network(
+            //     knowledge.imageUrl,
+            //     width: double.infinity,
+            //     height: 200,
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
             SizedBox(height: 20),
             Text(
               knowledge.title,

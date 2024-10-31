@@ -84,18 +84,17 @@ class ExerciseLog {
 class BloodPressure {
   final int systolic;
   final int diastolic;
-  final DateTime timestamp;
+  final String createdAt; // Ubah ke String
 
   BloodPressure({
     required this.systolic,
     required this.diastolic,
-    required this.timestamp,
+    required this.createdAt,
   });
-
   factory BloodPressure.fromJson(Map<String, dynamic> json) => BloodPressure(
     systolic: json['systolic'],
     diastolic: json['diastolic'],
-    timestamp: DateTime.parse(json['timestamp']),
+    createdAt: json['created_at'],
   );
 }
 

@@ -60,11 +60,14 @@ class _RecapListPageState extends State<RecapListPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                recap.date,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              Padding(
+                padding: const EdgeInsets.only(left:230.0),
+                child: Text(
+                  recap.date,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Divider(height: 24),
@@ -139,17 +142,7 @@ class _RecapListPageState extends State<RecapListPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      // Navigate to detail page
-                    },
-                    child: Row(
-                      children: [
-                        Text('Lihat Detail'),
-                        Icon(Icons.arrow_forward_ios, size: 16),
-                      ],
-                    ),
-                  ),
+
                 ],
               ),
             ],

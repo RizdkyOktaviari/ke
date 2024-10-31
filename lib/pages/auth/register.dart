@@ -10,6 +10,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  TimeOfDay _selectedTime = TimeOfDay.now();
   final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -21,12 +22,26 @@ class _RegisterPageState extends State<RegisterPage> {
   final _phoneController = TextEditingController();
   final _noteController = TextEditingController();
   final _medicineController = TextEditingController();
+  String selectedExercise = 'Rowing Machine (Intense)';
+
+  final Map<String, int> exerciseIds = {
+    'Rowing Machine (Intense)': 1,
+    'Low Impact Exercise': 2,
+    'Running': 3,
+    'Cycling': 4,
+    'Swimming': 5,
+    'Walking': 6,
+    'Other': 7,
+  };
 
   String _selectedGender = 'M';
   int _medicineCount = 0;
 
   Future<void> _register() async {
     if (!_validateInputs()) return;
+    final hour = _selectedTime.hour.toString().padLeft(2, '0');
+    final minute = _selectedTime.minute.toString().padLeft(2, '0');
+    final timeString = '$hour:$minute';
 
     final data = RegisterData(
       name: _nameController.text,
@@ -40,8 +55,8 @@ class _RegisterPageState extends State<RegisterPage> {
       phoneNumber: _phoneController.text,
       gender: _selectedGender,
       noteHypertension: _noteController.text,
-      exerciseId: 1, // Default value
-      exerciseTimeSchedule: "07:00", // Default value
+      exerciseId: exerciseIds[selectedExercise] ?? 1, // Default value
+      exerciseTimeSchedule: timeString, // Default value
       medicineName: _medicineController.text,
       medicineCount: _medicineCount,
     );
@@ -194,7 +209,62 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 SizedBox(height: 16),
-
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        'Nama Aktifitas Fisik',
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      ),
+                    ),
+                    Expanded(
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        value: selectedExercise,
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedExercise = newValue!;
+                          });
+                        },
+                        items: exerciseIds.keys.map((exercise) {
+                          return DropdownMenuItem(
+                            child: Text(exercise),
+                            value: exercise,
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        'Waktu Aktifitas Fisik',
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListTile(
+                        title: Text('${_selectedTime.format(context)}'),
+                        trailing: Icon(Icons.access_time),
+                        onTap: () async {
+                          final TimeOfDay? timeOfDay = await showTimePicker(
+                            context: context,
+                            initialTime: _selectedTime,
+                          );
+                          if (timeOfDay != null) {
+                            setState(() {
+                              _selectedTime = timeOfDay;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
                 Row(
                   children: [
                     Expanded(

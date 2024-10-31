@@ -16,6 +16,7 @@ import 'helpers/providers/message_provider.dart';
 import 'helpers/providers/note_provider.dart';
 import 'helpers/providers/recap_provider.dart';
 import 'helpers/providers/recipe_provider.dart';
+import 'helpers/providers/reminder_provider.dart';
 import 'helpers/providers/water_provider.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -51,6 +52,7 @@ void main() async {
     ChangeNotifierProvider(
       create: (contex) => alarmprovider(),
     ),
+    ChangeNotifierProvider(create: (_) => ReminderProvider()),
     ChangeNotifierProvider(create: (_) => ExerciseProvider()),
     ChangeNotifierProvider(create: (_) => WaterProvider()),
     ChangeNotifierProvider(create: (_) => BloodPressureProvider()),

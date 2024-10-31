@@ -1,6 +1,9 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import '../../models/resep_model.dart';
 
@@ -14,6 +17,10 @@ class RecipeProvider with ChangeNotifier {
   List<Recipe> get recipes => _recipes;
   bool get isLoading => _isLoading;
   String get error => _error;
+  String _fileName = '';
+  File? _image;
+  String get fileName => _fileName;
+  File? get image => _image;
 
   Future<void> fetchRecipes() async {
     _isLoading = true;
@@ -86,5 +93,68 @@ class RecipeProvider with ChangeNotifier {
     _isSubmitting = false;
     notifyListeners();
     return false;
+  }
+
+  Future<void> getImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if(image == null) return;
+
+      _image = File(image.path);
+      _fileName = image.name;
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
+
+  Future<bool> addRecipe(String token, Recipe recipe) async {
+    _isLoading = true;
+    _error = '';
+    notifyListeners();
+
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://108.137.67.23/api/recipes'),
+      );
+
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
+
+      final fields = recipe.toJson();
+      fields.forEach((key, value) {
+        request.fields[key] = value.toString();
+      });
+
+      if (_image != null) {
+        request.files.add(
+            await http.MultipartFile.fromPath('image', _image!.path)
+        );
+      }
+
+      var response = await request.send();
+      var responseData = await response.stream.bytesToString();
+      var data = json.decode(responseData);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      }
+
+      _error = data['message'] ?? 'Gagal menambahkan resep';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 }

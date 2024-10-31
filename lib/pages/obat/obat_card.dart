@@ -72,11 +72,13 @@ class MedicineCard extends StatelessWidget {
               topLeft: Radius.circular(8),
               topRight: Radius.circular(8),
             ),
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
-              height: 200,
-              width: double.infinity,
+            child: Center(
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+                height: 200,
+                width: double.infinity,
+              ),
             ),
           ),
           Padding(

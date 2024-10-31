@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:kesehatan_mobile/helpers/providers/camera_provider.dart';
+import '../../helpers/providers/auth_provider.dart';
+import '../../helpers/providers/recipe_provider.dart';
+import '../../models/resep_model.dart';
 
 class ManagePage extends StatelessWidget {
   const ManagePage({Key? key}) : super(key: key);
@@ -8,16 +10,89 @@ class ManagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => CameraProvider(),
+      create: (context) => RecipeProvider(),
       child: _ManagePageContent(),
     );
   }
 }
 
-class _ManagePageContent extends StatelessWidget {
+class _ManagePageContent extends StatefulWidget {
+  @override
+  _ManagePageContentState createState() => _ManagePageContentState();
+}
+
+class _ManagePageContentState extends State<_ManagePageContent> {
+  final _foodNameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _portionController = TextEditingController();
+  final _fatController = TextEditingController();
+  final _proteinController = TextEditingController();
+  final _carbsController = TextEditingController();
+  final _sugarController = TextEditingController();
+  final _cholesterolController = TextEditingController();
+  final _massController = TextEditingController();
+
+  Future<void> _saveRecipe() async {
+    try {
+      // Validasi input
+      if (_foodNameController.text.isEmpty ||
+          _descriptionController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Masukkan nama dan deskripsi makanan')),
+        );
+        return;
+      }
+
+      final token = Provider.of<AuthProvider>(context, listen: false).token;
+      if (token == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Not authenticated')),
+        );
+        return;
+      }
+
+      final recipe = Recipe(
+        foodName: _foodNameController.text,
+        description: _descriptionController.text,
+        foodType: 'breakfast', // or dynamic dropdown value
+        portion: _portionController.text,
+        calories: int.tryParse(_carbsController.text) ?? 0, // Calculate calories
+        protein: int.tryParse(_proteinController.text),
+        fat: int.tryParse(_fatController.text),
+        carbohydrate: int.tryParse(_carbsController.text),
+        sugar: int.tryParse(_sugarController.text),
+        cholesterol: int.tryParse(_cholesterolController.text),
+        mass: int.tryParse(_massController.text),
+      );
+
+      final success = await Provider.of<RecipeProvider>(context, listen: false)
+          .addRecipe(token, recipe);
+
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Resep berhasil ditambahkan')),
+        );
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                Provider.of<RecipeProvider>(context, listen: false).error
+            ),
+          ),
+        );
+      }
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final cameraProvider = Provider.of<CameraProvider>(context);
+    final recipeProvider = Provider.of<RecipeProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -34,74 +109,91 @@ class _ManagePageContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: Text('Lemak'),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '0',
-                  ),
+              TextField(
+                controller: _foodNameController,
+                decoration: InputDecoration(
+                  labelText: 'Nama Makanan',
+                  border: OutlineInputBorder(),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: Text('Protein'),
+              SizedBox(height: 16),
+              TextField(
+                controller: _descriptionController,
+                decoration: InputDecoration(
+                  labelText: 'Deskripsi',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 3,
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '0',
-                  ),
+              SizedBox(height: 16),
+              TextField(
+                controller: _portionController,
+                decoration: InputDecoration(
+                  labelText: 'Porsi',
+                  border: OutlineInputBorder(),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: Text('Carbs'),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '0',
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: Text('Fiber'),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '0',
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: Text('Sodium (mg)'),
-              ),
-              const TextField(
+              SizedBox(height: 16),
+              Text('Lemak'),
+              TextField(
+                controller: _fatController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: '0',
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 16),
+              Text('Protein'),
+              TextField(
+                controller: _proteinController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: '0',
+                ),
+              ),
+              SizedBox(height: 16),
+              Text('Karbohidrat'),
+              TextField(
+                controller: _carbsController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: '0',
+                ),
+              ),
+              SizedBox(height: 16),
+              Text('Gula'),
+              TextField(
+                controller: _sugarController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: '0',
+                ),
+              ),
+              SizedBox(height: 16),
+              Text('Kolesterol (mg)'),
+              TextField(
+                controller: _cholesterolController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: '0',
+                ),
+              ),
+              SizedBox(height: 16),
+              Text('Berat (g)'),
+              TextField(
+                controller: _massController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: '0',
+                ),
+              ),
+              SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(
@@ -114,9 +206,9 @@ class _ManagePageContent extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          cameraProvider.fileName.isEmpty
+                          recipeProvider.fileName.isEmpty
                               ? 'No file chosen'
-                              : cameraProvider.fileName,
+                              : recipeProvider.fileName,
                           style: TextStyle(fontSize: 16),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -125,20 +217,36 @@ class _ManagePageContent extends StatelessWidget {
                   ),
                   SizedBox(width: 10),
                   ElevatedButton(
-                    onPressed: cameraProvider.getImage,
+                    onPressed: recipeProvider.getImage,
                     child: Text('Choose File'),
                   ),
                 ],
               ),
-              if (cameraProvider.image != null)
+              if (recipeProvider.image != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Image.file(cameraProvider.image!, height: 200),
+                  child: Image.file(recipeProvider.image!, height: 200),
                 ),
+              SizedBox(height: 20),
               Center(
-                child: ElevatedButton(
-                  onPressed: cameraProvider.uploadImage,
-                  child: Text('Simpan'),
+                child: recipeProvider.isLoading
+                    ? CircularProgressIndicator()
+                    : ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 15,
+                    ),
+                  ),
+                  onPressed: _saveRecipe,
+                  child: Text(
+                    'Simpan',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -146,5 +254,19 @@ class _ManagePageContent extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _foodNameController.dispose();
+    _descriptionController.dispose();
+    _portionController.dispose();
+    _fatController.dispose();
+    _proteinController.dispose();
+    _carbsController.dispose();
+    _sugarController.dispose();
+    _cholesterolController.dispose();
+    _massController.dispose();
+    super.dispose();
   }
 }
