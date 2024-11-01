@@ -143,7 +143,7 @@ class NotificationService {
         'Schedule Notifications',
         description: 'Channel for schedule notifications',
         importance: Importance.high,
-        sound: RawResourceAndroidNotificationSound('notification_sound'), // Custom sound jika diperlukan
+        // sound: RawResourceAndroidNotificationSound('notification_sound'), // Custom sound jika diperlukan
       ),
     );
 
@@ -165,6 +165,32 @@ class NotificationService {
       print('Body: ${message.notification?.body}');
       print('Data: ${message.data}');
       _handleScheduleMessage(message);
+
+      // Show notification if app is in foreground
+      if (message.notification != null) {
+        _notifications.show(
+          DateTime.now().millisecond,
+          message.notification!.title,
+          message.notification!.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'schedule_channel',
+              'Schedule Notifications',
+              channelDescription: 'Channel for schedule notifications',
+              importance: Importance.high,
+              priority: Priority.high,
+              icon: '@mipmap/ic_launcher',
+              // sound: RawResourceAndroidNotificationSound('notification_sound'),
+            ),
+            iOS: const DarwinNotificationDetails(
+              presentAlert: true,
+              presentBadge: true,
+              presentSound: true,
+            ),
+          ),
+          payload: message.data.toString(),
+        );
+      }
     });
 
     // Listen to messages when app is in background/terminated
@@ -229,7 +255,7 @@ class NotificationService {
           importance: Importance.high,
           priority: Priority.high,
           icon: '@mipmap/ic_launcher',
-          sound: RawResourceAndroidNotificationSound('notification_sound'),
+          // sound: RawResourceAndroidNotificationSound('notification_sound'),
           styleInformation: BigTextStyleInformation(body),
         ),
         iOS: const DarwinNotificationDetails(
