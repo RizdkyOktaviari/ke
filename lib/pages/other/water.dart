@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/auth_provider.dart';
 import '../../helpers/providers/water_provider.dart';
 import '../../models/water_model.dart';
@@ -18,8 +19,9 @@ class _WaterPageState extends State<WaterPage> {
   double waterConsumed = 0;
 
   Future<void> _submitWaterIntake() async {
+    final localizations = AppLocalizations.of(context);
     final drinkLog = DrinkLog(
-      drinkName: 'Water',
+      drinkName: localizations!.water,
       amount: waterConsumed.toInt(),
     );
 
@@ -46,9 +48,10 @@ class _WaterPageState extends State<WaterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Water Intake'),
+        title: Text(localizations!.waterIntake),
         backgroundColor: Colors.blueAccent,
       ),
       body: Consumer<WaterProvider>(
@@ -62,7 +65,7 @@ class _WaterPageState extends State<WaterPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Enter the amount of water consumed (in ml):'),
+                Text(localizations.enterWaterConsumed),
                 SizedBox(height: 20),
                 TextField(
                   keyboardType: TextInputType.number,
@@ -71,13 +74,13 @@ class _WaterPageState extends State<WaterPage> {
                   },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Enter water in ml',
+                    hintText: localizations.enterWaterInMl,
                   ),
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _submitWaterIntake,
-                  child: Text('Add Water Intake'),
+                  child: Text(localizations.addWaterIntake, style: TextStyle(color: Colors.white),),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
                 ),
               ],

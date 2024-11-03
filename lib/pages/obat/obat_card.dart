@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/auth_provider.dart';
 import '../../helpers/providers/medicine_provider.dart';
 import '../../models/medicine_model.dart';
@@ -62,6 +63,8 @@ class MedicineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Card(
       margin: EdgeInsets.all(8),
       child: Column(
@@ -96,7 +99,7 @@ class MedicineCard extends StatelessWidget {
     if (showAddButton) // Move ADD button here
     ElevatedButton(
     onPressed: () => _addMedicine(context),
-    child: Text('ADD', style: TextStyle(color: Colors.white),),
+    child: Text(localizations!.add, style: TextStyle(color: Colors.white),),
     style: ElevatedButton.styleFrom(
     backgroundColor: Colors.blue,
     ),
@@ -114,19 +117,19 @@ class MedicineCard extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Aturan Pakai:',
+                  localizations!.usageRules,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(usage),
                 SizedBox(height: 8),
                 Text(
-                  'Deskripsi:',
+                  localizations.description,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(description),
                 SizedBox(height: 16),
                 Text(
-                  'Indikasi:',
+                  localizations.indications,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Column(
@@ -145,7 +148,7 @@ class MedicineCard extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Peringatan:',
+                  localizations.warnings,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.red,

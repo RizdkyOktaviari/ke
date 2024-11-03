@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kesehatan_mobile/pages/reminder/new_add_reminder.dart';
 
+import '../../helpers/app_localizations.dart';
+
 class ReminderNewPage extends StatefulWidget {
   @override
   State<ReminderNewPage> createState() => _ReminderNewPageState();
@@ -10,9 +12,10 @@ class _ReminderNewPageState extends State<ReminderNewPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reminder'),
+        title: Text(localizations!.reminder),
         backgroundColor: Colors.blue,
       ),
       body: SingleChildScrollView(
@@ -22,25 +25,25 @@ class _ReminderNewPageState extends State<ReminderNewPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Atur notifikasi hanya setelah 21 Hari dari akun dibuat',
+                localizations.reminderDelay,
                 style: TextStyle(fontSize: 16, color: Colors.grey[600]),
               ),
               SizedBox(height: 24),
-              _buildReminderSection('🍳 Sarapan', Colors.orange),
+              _buildReminderSection(localizations.breakfastpic, Colors.orange),
               _buildDivider(),
-              _buildReminderSection('🥗 Makan Siang', Colors.green),
+              _buildReminderSection(localizations.lunchpic, Colors.green),
               _buildDivider(),
-              _buildReminderSection('🥣 Makan Malam', Colors.blue),
+              _buildReminderSection(localizations.dinnerpic, Colors.blue),
               _buildDivider(),
-              _buildReminderSection('🍪 Cemilan', Colors.deepOrange),
+              _buildReminderSection(localizations.snackspic, Colors.deepOrange),
               _buildDivider(),
-              _buildReminderSection('🥤 Minum', Colors.pink),
+              _buildReminderSection(localizations.drinkpic, Colors.pink),
               _buildDivider(),
-              _buildReminderSection('🏃 Aktivitas Fisik', Colors.red),
+              _buildReminderSection(localizations.physicalActivitypic, Colors.red),
               _buildDivider(),
-              _buildReminderSection('💊 Minum Obat', Colors.purple),
+              _buildReminderSection(localizations.takeMedicinepic, Colors.purple),
               _buildDivider(),
-              _buildReminderSection('📚 Membaca Pengetahuan', Colors.blue),
+              _buildReminderSection(localizations.readKnowledgepic, Colors.blue),
               _buildDivider(),
             ],
           ),
@@ -50,6 +53,7 @@ class _ReminderNewPageState extends State<ReminderNewPage> {
   }
 
   Widget _buildReminderSection(String title, Color color) {
+    final localizations = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -78,7 +82,7 @@ class _ReminderNewPageState extends State<ReminderNewPage> {
                 Icon(Icons.add, color: Colors.grey),
                 SizedBox(width: 8),
                 Text(
-                  'Tambah Pengingat',
+                  localizations!.addReminder,
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 16,

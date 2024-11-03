@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:kesehatan_mobile/pages/obat/obat_card.dart';
 
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/medicine_provider.dart';
 
 class ObatPage extends StatefulWidget {
@@ -23,13 +24,14 @@ class _ObatPageState extends State<ObatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Daftar Obat'),
+        title: Text(localizations!.medicine),
         backgroundColor: Colors.blue,
       ),
       body: Consumer<MedicineProvider>(

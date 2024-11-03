@@ -13,6 +13,7 @@ import 'package:kesehatan_mobile/pages/reminder/new_reminder.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/food_log_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,33 +40,50 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title:
             // make center title
             Text(
-          'Log',
+              localizations.log,
           style: AppTextStyles.headline6,
         ),
         backgroundColor: Colors.blueAccent,
         actions: [
-          PopupMenuButton<String>(
-            onSelected: (String languageCode) {
-              context
-                  .read<LocaleProvider>()
-                  .toggleLocale(); // Change the locale
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'en',
-                child: Text('English'),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Consumer<LocaleProvider>(
+              builder: (context, provider, _) => Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      provider.setLocaleByCode('id');
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: provider.locale.languageCode == 'id'
+                          ? Colors.white
+                          : Colors.white.withOpacity(0.5),
+                    ),
+                    child: const Text('ID'),
+                  ),
+                  Text('|', style: TextStyle(color: Colors.white)),
+                  TextButton(
+                    onPressed: () {
+                      provider.setLocaleByCode('en');
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: provider.locale.languageCode == 'en'
+                          ? Colors.white
+                          : Colors.white.withOpacity(0.5),
+                    ),
+                    child: const Text('EN'),
+                  ),
+                ],
               ),
-              const PopupMenuItem<String>(
-                value: 'id',
-                child: Text('Indonesian'),
-              ),
-            ],
+            ),
           ),
         ],
       ),
@@ -77,13 +95,13 @@ class HomePageState extends State<HomePage> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: <Widget>[
-                  const DrawerHeader(
-                    decoration: BoxDecoration(
+                  DrawerHeader(
+                    decoration: const BoxDecoration(
                       color: Colors.blueAccent,
                     ),
                     child: Text(
-                      'Menu Penyakit',
-                      style: TextStyle(
+                      localizations.menu,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                       ),
@@ -119,10 +137,10 @@ class HomePageState extends State<HomePage> {
                   // ),
                   ExpansionTile(
                     leading: Icon(Icons.book_online_sharp),
-                    title: Text('Pengetahuan'),
+                    title: Text(localizations.knowledge),
                     children: <Widget>[
                       ListTile(
-                        title: Text('Pengetahuan'),
+                        title: Text(localizations.knowledge),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -170,7 +188,7 @@ class HomePageState extends State<HomePage> {
 
                   ListTile(
                     leading: Icon(Icons.rice_bowl_sharp),
-                    title: Text('Recipe'),
+                    title: Text(localizations.recipe),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -182,7 +200,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   ListTile(
                     leading: Icon(Icons.restaurant_sharp),
-                    title: Text('Manage'),
+                    title: Text(localizations.manage),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -194,7 +212,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   ListTile(
                     leading: Icon(Icons.list_alt_sharp),
-                    title: Text('Rekapan'),
+                    title: Text(localizations.summary),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -206,7 +224,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   ListTile(
                     leading: Icon(Icons.medication_liquid_sharp),
-                    title: Text('Obat'),
+                    title: Text(localizations.medicine),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -218,7 +236,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   ListTile(
                     leading: Icon(Icons.chat_bubble_sharp),
-                    title: Text('Chat'),
+                    title: Text(localizations.chat),
                     onTap: () {
                       // Navigasi ke ReminderPage
                       Navigator.push(
@@ -233,7 +251,7 @@ class HomePageState extends State<HomePage> {
                   // listtile to setting reminder
                   ListTile(
                     leading: Icon(Icons.notifications),
-                    title: Text('Pengingat'),
+                    title: Text(localizations.reminder),
                     onTap: () {
                       // Navigasi ke ReminderPage
                       Navigator.push(
@@ -249,18 +267,18 @@ class HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.exit_to_app, color: Colors.blueAccent),
-              title: Text('Exit'),
+              title: Text(localizations.exit),
               onTap: () {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text('Konfirmasi Keluar'),
+                    title: Text(localizations.exitConfirmTitle),
                     content: Text(
-                        'Apakah Anda yakin ingin keluar dan kembali ke halaman login?'),
+                        localizations.exitConfirmMessage),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(false),
-                        child: Text('Batal'),
+                        child: Text(localizations.cancel),
                       ),
                       TextButton(
                         onPressed: () {
@@ -273,7 +291,7 @@ class HomePageState extends State<HomePage> {
                                 false, // Menghapus semua rute sebelumnya
                           );
                         },
-                        child: Text('Keluar'),
+                        child: Text(localizations.exit),
                       ),
                     ],
                   ),

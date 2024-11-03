@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/auth_provider.dart';
 import '../../helpers/providers/note_provider.dart';
 import '../../models/note_model.dart';
@@ -53,10 +54,11 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {final localizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notes'),
+        title: Text(localizations!.notes),
         backgroundColor: Colors.blueAccent,
       ),
       body: Consumer<NoteProvider>(
@@ -70,31 +72,31 @@ class _NotesPageState extends State<NotesPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Title:'),
+                  Text(localizations.noteTitle),
                   SizedBox(height: 8),
                   TextField(
                     controller: _titleController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Enter note title',
+                      hintText: localizations.enterNoteTitle,
                     ),
                   ),
                   SizedBox(height: 16),
-                  Text('Content:'),
+                  Text(localizations.noteContent),
                   SizedBox(height: 8),
                   TextField(
                     controller: _contentController,
                     maxLines: 5,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Enter your note',
+                      hintText: localizations.enterNoteContent,
                     ),
                   ),
                   SizedBox(height: 20),
                   Center(
                     child: ElevatedButton(
                       onPressed: _submitNote,
-                      child: Text('Add Note'),
+                      child: Text(localizations.addNote),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent
                       ),

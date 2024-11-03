@@ -63,15 +63,15 @@ class _LoginPageState extends State<LoginPage> {
                             controller: _usernameController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return AppLocalizations.of(context)!.email;
+                                return AppLocalizations.of(context)!.username;
                               }
                               if (value.length > 255) {
-                                return AppLocalizations.of(context)!.email;
+                                return AppLocalizations.of(context)!.username;
                               }
                               return null;
                             },
                             decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context)!.email,
+                              labelText: AppLocalizations.of(context)!.username,
                               labelStyle: TextStyle(color: Colors.blueAccent),
                               prefixIcon:
                                   Icon(Icons.person, color: Colors.blueAccent),

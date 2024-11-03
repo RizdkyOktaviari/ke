@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/auth_provider.dart';
 import '../../helpers/providers/exercise_provider.dart';
 import '../../models/exercise_model.dart';
@@ -30,6 +31,26 @@ class _ExercisePageState extends State<ExercisePage> {
     'Walking': 6,
     'Other': 7,
   };
+  String _getLocalizedExerciseName(AppLocalizations localizations, String exerciseKey) {
+    switch (exerciseKey) {
+      case 'Rowing Machine (Intense)':
+        return localizations.rowingMachineIntense;
+      case 'Low Impact Exercise':
+        return localizations.lowImpactExercise;
+      case 'Running':
+        return localizations.running;
+      case 'Cycling':
+        return localizations.cycling;
+      case 'Swimming':
+        return localizations.swimming;
+      case 'Walking':
+        return localizations.walking;
+      case 'Other':
+        return localizations.other;
+      default:
+        return exerciseKey;
+    }
+  }
 
   void _calculateCalories() {
     setState(() {
@@ -71,9 +92,11 @@ class _ExercisePageState extends State<ExercisePage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exercise'),
+        title: Text(localizations!.exercise),
         backgroundColor: Colors.blueAccent,
       ),
       body: Consumer<ExerciseProvider>(
@@ -88,11 +111,11 @@ class _ExercisePageState extends State<ExercisePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Enter your weight, exercise duration, and the activity to estimate your energy expenditure',
+                    localizations.exerciseInstructions,
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 20),
-                  Text('Weight (kg)'),
+                  Text(localizations.weightInKg),
                   TextField(
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
@@ -100,11 +123,11 @@ class _ExercisePageState extends State<ExercisePage> {
                     },
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Enter weight in kg',
+                      hintText: localizations.enterWeightInKg,
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text('Duration (minutes)'),
+                  Text(localizations.durationInMinutes),
                   TextField(
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
@@ -112,11 +135,11 @@ class _ExercisePageState extends State<ExercisePage> {
                     },
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Enter duration in minutes',
+                      hintText: localizations.enterDurationInMinutes,
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text('Distance (meters)'),
+                  Text(localizations.distanceInMeters),
                   TextField(
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
@@ -124,11 +147,11 @@ class _ExercisePageState extends State<ExercisePage> {
                     },
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Enter distance in meters',
+                      hintText: localizations.enterDistanceInMeters,
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text('Exercise Type'),
+                  Text(localizations.exerciseType),
                   DropdownButton<String>(
                     isExpanded: true,
                     value: selectedExercise,
@@ -139,7 +162,7 @@ class _ExercisePageState extends State<ExercisePage> {
                     },
                     items: exerciseIds.keys.map((exercise) {
                       return DropdownMenuItem(
-                        child: Text(exercise),
+                        child: Text(_getLocalizedExerciseName(localizations, exercise)),
                         value: exercise,
                       );
                     }).toList(),
@@ -147,12 +170,12 @@ class _ExercisePageState extends State<ExercisePage> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _submitExercise,
-                    child: Text('Calculate and Add'),
+                    child: Text(localizations.calculateAndAdd),
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'Calories Burned: $caloriesBurned kCal',
+                    localizations.caloriesBurnedFormat(caloriesBurned),
                     style: TextStyle(fontSize: 20),
                   ),
                 ],

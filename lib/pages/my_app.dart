@@ -5,6 +5,9 @@ import 'package:kesehatan_mobile/helpers/providers/local_provider.dart';
 import 'package:kesehatan_mobile/pages/auth/login.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/providers/auth_provider.dart';
+import 'authentication.dart';
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -14,6 +17,14 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   @override
+  void initState() {
+    super.initState();
+    // Initialize auth check
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AuthProvider>(context, listen: false).checkAuthStatus();
+    });
+  }
+
   Widget build(BuildContext context) {
     return MaterialApp(
         locale: context.watch<LocaleProvider>().locale,
@@ -31,6 +42,6 @@ class MyAppState extends State<MyApp> {
           Locale('id'), // Indonesian
           Locale('en'), // English
         ],
-        home: LoginPage());
+        home:AuthenticationWrapper(),);
   }
 }

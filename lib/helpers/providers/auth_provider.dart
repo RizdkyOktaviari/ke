@@ -13,6 +13,7 @@ class AuthProvider with ChangeNotifier {
   User? _user;
   bool _isLoading = false;
   String? _error;
+  bool _isInitialized = false;
 
   String? get token => _token;
   User? get user => _user;
@@ -20,6 +21,14 @@ class AuthProvider with ChangeNotifier {
   String? get error => _error;
   bool get isAuthenticated => _token != null;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  // Tambahkan initialize method
+  Future<void> initialize() async {
+    if (_isInitialized) return;
+
+    await checkAuthStatus();
+    _isInitialized = true;
+  }
 
   Future<String?> getFCMToken() async {
     try {
@@ -36,13 +45,14 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> login(String username, String password,
-      [String? fcmToken]) async {
+  Future<bool> login(String username, String password) async {
     try {
       _isLoading = true;
       _error = null;
       notifyListeners();
+
       String? fcmToken = await getFCMToken();
+      print('FCM Token: $fcmToken');
 
       final response = await _authService.login(username, password, fcmToken);
 
@@ -50,14 +60,9 @@ class AuthProvider with ChangeNotifier {
         _token = response.meta.token;
         _user = response.data;
 
-        // Save to SharedPreferences
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', _token!);
-        await prefs.setString('user', userToJson(_user!));
-        if (fcmToken != null) {
-          await prefs.setString('fcm_token', fcmToken);
-        }
-        print('Auth Token: $_token');
+        // Save auth data
+        await _saveAuthData(_token!, _user!, fcmToken);
+        print('Login success - Auth Token: $_token');
 
         _isLoading = false;
         notifyListeners();
@@ -73,6 +78,16 @@ class AuthProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return false;
+    }
+  }
+
+  // Method baru untuk menyimpan data auth
+  Future<void> _saveAuthData(String token, User user, String? fcmToken) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+    await prefs.setString('user', userToJson(user));
+    if (fcmToken != null) {
+      await prefs.setString('fcm_token', fcmToken);
     }
   }
 
@@ -110,6 +125,7 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
   }
+
   Future<void> logout() async {
     _token = null;
     _user = null;
@@ -121,17 +137,27 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> checkAuthStatus() async {
+  Future<bool> checkAuthStatus() async {
+    print('Checking auth status...');
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('token');
     final userJson = prefs.getString('user');
+
     if (userJson != null) {
-      _user = userFromJson(userJson);
+      try {
+        _user = userFromJson(userJson);
+        print('Auth restored - User: ${_user?.username}');
+        notifyListeners();
+        return true;
+      } catch (e) {
+        print('Error restoring auth: $e');
+        await logout();
+        return false;
+      }
     }
-    notifyListeners();
+    return false;
   }
 
-  // Helper methods for user serialization
   String userToJson(User user) {
     return jsonEncode({
       'id': user.id,

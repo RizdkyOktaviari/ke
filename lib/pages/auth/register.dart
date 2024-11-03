@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/auth_provider.dart';
+import '../../helpers/providers/local_provider.dart';
 import '../../models/register_model.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -37,6 +39,26 @@ class _RegisterPageState extends State<RegisterPage> {
   String _selectedGender = 'M';
   int _medicineCount = 0;
 
+  Widget _buildLanguageButton(String label, VoidCallback onPressed, bool isSelected) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isSelected ? Colors.blueAccent : Colors.grey[300],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      ),
+      onPressed: onPressed,
+      child: Text(
+        label,
+        style: TextStyle(
+          color: isSelected ? Colors.white : Colors.black87,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
   Future<void> _register() async {
     if (!_validateInputs()) return;
     final hour = _selectedTime.hour.toString().padLeft(2, '0');
@@ -55,18 +77,17 @@ class _RegisterPageState extends State<RegisterPage> {
       phoneNumber: _phoneController.text,
       gender: _selectedGender,
       noteHypertension: _noteController.text,
-      exerciseId: exerciseIds[selectedExercise] ?? 1, // Default value
-      exerciseTimeSchedule: timeString, // Default value
+      exerciseId: exerciseIds[selectedExercise] ?? 1,
+      exerciseTimeSchedule: timeString,
       medicineName: _medicineController.text,
       medicineCount: _medicineCount,
     );
 
-    final success = await Provider.of<AuthProvider>(context, listen: false)
-        .register(data);
+    final success = await context.read<AuthProvider>().register(data);
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registrasi berhasil')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.registrationSuccess)),
       );
       Navigator.pop(context);
     }
@@ -85,14 +106,14 @@ class _RegisterPageState extends State<RegisterPage> {
         _noteController.text.isEmpty ||
         _medicineController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Semua field harus diisi')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.allFieldsRequired)),
       );
       return false;
     }
 
     if (_passwordController.text != _passwordConfirmController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Password tidak sama')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.passwordsDoNotMatch)),
       );
       return false;
     }
@@ -102,6 +123,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -112,6 +135,68 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Consumer<LocaleProvider>(
+                builder: (context, provider, child) => Row(
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: provider.locale.languageCode == 'id'
+                            ? Colors.blueAccent
+                            : Colors.grey[300],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      ),
+                      onPressed: () async {
+                        await provider.setLocaleByCode('id');
+                        setState(() {}); // Refresh UI
+                      },
+                      child: Text(
+                        'ID',
+                        style: TextStyle(
+                          color: provider.locale.languageCode == 'id'
+                              ? Colors.white
+                              : Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: provider.locale.languageCode == 'en'
+                            ? Colors.blueAccent
+                            : Colors.grey[300],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      ),
+                      onPressed: () async {
+                        await provider.setLocaleByCode('en');
+                        setState(() {}); // Refresh UI
+                      },
+                      child: Text(
+                        'EN',
+                        style: TextStyle(
+                          color: provider.locale.languageCode == 'en'
+                              ? Colors.white
+                              : Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )
+        ],
       ),
       body: Consumer<AuthProvider>(
         builder: (context, auth, child) {
@@ -125,7 +210,7 @@ class _RegisterPageState extends State<RegisterPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Buat Akun',
+                  l10n.createAccount,
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -134,7 +219,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Daftar untuk memulai',
+                  l10n.signUpToGetStarted,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey[600],
@@ -144,70 +229,71 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 TextField(
                   controller: _nameController,
-                  decoration: _buildInputDecoration('Nama'),
+                  decoration: _buildInputDecoration(l10n.name),
                 ),
                 SizedBox(height: 16),
 
                 TextField(
                   controller: _usernameController,
-                  decoration: _buildInputDecoration('Username'),
+                  decoration: _buildInputDecoration(l10n.username),
                 ),
                 SizedBox(height: 16),
 
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: _buildInputDecoration('Password'),
+                  decoration: _buildInputDecoration(l10n.password),
                 ),
                 SizedBox(height: 16),
 
                 TextField(
                   controller: _passwordConfirmController,
                   obscureText: true,
-                  decoration: _buildInputDecoration('Konfirmasi Password'),
+                  decoration: _buildInputDecoration(l10n.confirmPassword),
                 ),
                 SizedBox(height: 16),
 
                 TextField(
                   controller: _birthController,
-                  decoration: _buildInputDecoration('Tanggal Lahir (YYYY-MM-DD)'),
+                  decoration: _buildInputDecoration(l10n.dateOfBirth),
                 ),
                 SizedBox(height: 16),
 
                 TextField(
                   controller: _educationController,
-                  decoration: _buildInputDecoration('Pendidikan'),
+                  decoration: _buildInputDecoration(l10n.education),
                 ),
                 SizedBox(height: 16),
 
                 TextField(
                   controller: _occupationController,
-                  decoration: _buildInputDecoration('Pekerjaan'),
+                  decoration: _buildInputDecoration(l10n.occupation),
                 ),
                 SizedBox(height: 16),
 
                 TextField(
                   controller: _durationController,
                   keyboardType: TextInputType.number,
-                  decoration: _buildInputDecoration('Lama menderita Hipertensi (dalam tahun)'),
+                  decoration: _buildInputDecoration(l10n.howLongHaveYouHadHypertension),
                 ),
                 SizedBox(height: 16),
 
                 TextField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
-                  decoration: _buildInputDecoration('No Handphone'),
+                  decoration: _buildInputDecoration(l10n.phone),
                 ),
                 SizedBox(height: 24),
 
                 Text(
-                  'Setting Notifikasi',
+                  l10n.notificationSettings,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                     color: Colors.grey[700],
                   ),
                 ),
+
                 SizedBox(height: 16),
                 Row(
                   children: [
@@ -270,7 +356,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        'Minum Obat',
+                        l10n.medicine,
                         style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                       ),
                     ),
@@ -290,7 +376,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        'Berapa kali sehari',
+                        l10n.timesPerDay,
                         style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                       ),
                     ),
@@ -316,7 +402,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 SizedBox(height: 24),
 
                 Text(
-                  'Jenis Kelamin',
+                  l10n.gender,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -327,7 +413,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     Expanded(
                       child: RadioListTile<String>(
-                        title: Text('Pria', style: TextStyle(color: Colors.blue)),
+                        title: Text(AppLocalizations.of(context)!.male),
                         value: 'M',
                         groupValue: _selectedGender,
                         onChanged: (value) {
@@ -339,7 +425,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     Expanded(
                       child: RadioListTile<String>(
-                        title: Text('Wanita', style: TextStyle(color: Colors.blue)),
+                        title: Text(AppLocalizations.of(context)!.female),
                         value: 'F',
                         groupValue: _selectedGender,
                         onChanged: (value) {
@@ -356,7 +442,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 TextField(
                   controller: _noteController,
                   maxLines: 3,
-                  decoration: _buildInputDecoration('Catatan tekanan darah pertama kali'),
+                  decoration: _buildInputDecoration(l10n.bloodPressureNote),
                 ),
                 SizedBox(height: 30),
 
@@ -381,7 +467,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     onPressed: _register,
                     child: Text(
-                      'Sign Up',
+                      l10n.signUp,
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),

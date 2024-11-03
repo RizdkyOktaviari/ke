@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/auth_provider.dart';
 import '../../helpers/providers/reminder_provider.dart';
 import '../../models/reminder_model.dart';
@@ -22,10 +23,11 @@ class _AddReminderPageState extends State<AddReminderPage> {
   final TextEditingController _messageController = TextEditingController();
 
   Future<void> _saveReminder() async {
+    final localizations = AppLocalizations.of(context);
     try {
       if (_messageController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Masukkan pesan reminder')),
+          SnackBar(content: Text(localizations!.enterReminderMessage)),
         );
         return;
       }
@@ -33,7 +35,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
       final token = Provider.of<AuthProvider>(context, listen: false).token;
       if (token == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Not authenticated')),
+          SnackBar(content: Text(localizations!.notAuthenticated)),
         );
         return;
       }
@@ -59,13 +61,13 @@ class _AddReminderPageState extends State<AddReminderPage> {
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Reminder berhasil ditambahkan')),
+          SnackBar(content: Text(localizations!.reminderAddedSuccessfully)),
         );
         Navigator.pop(context);
       } else {
         final error = Provider.of<ReminderProvider>(context, listen: false).error;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error ?? 'Gagal menambahkan reminder')),
+          SnackBar(content: Text(error ?? localizations!.failedToAddReminder)),
         );
       }
     } catch (e) {
@@ -77,9 +79,10 @@ class _AddReminderPageState extends State<AddReminderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tambah Pengingat ${widget.type}'),
+        title: Text(localizations!.addReminderFor(widget.type)),
       ),
       body: Consumer<ReminderProvider>(
         builder: (context, provider, child) {
@@ -93,14 +96,14 @@ class _AddReminderPageState extends State<AddReminderPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Pilih Waktu',
+            localizations.selectTime,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 ListTile(
-                  title: Text('Waktu: ${_selectedTime.format(context)}'),
+                  title: Text(localizations.timeFormat(_selectedTime.format(context))),
                   trailing: Icon(Icons.access_time),
                   onTap: () async {
                     final TimeOfDay? timeOfDay = await showTimePicker(
@@ -116,7 +119,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
                 ),
                 SizedBox(height: 24),
                 Text(
-                  'Pilih Tanggal',
+                  localizations.selectDate,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -124,7 +127,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
                 ),
                 ListTile(
                   title: Text(
-                      'Tanggal: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}'
+                    localizations.dateFormat(DateFormat('yyyy-MM-dd').format(_selectedDate))
                   ),
                   trailing: Icon(Icons.calendar_today),
                   onTap: () async {
@@ -145,7 +148,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
                 TextField(
                   controller: _messageController,
                   decoration: InputDecoration(
-                    labelText: 'Pesan Pengingat',
+                    labelText: localizations.reminderMessage,
                     border: OutlineInputBorder(),
                   ),
                   maxLines: 3,
@@ -157,7 +160,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
                     onPressed: _saveReminder,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Text('Simpan Pengingat'),
+                      child: Text(localizations.saveReminder),
                     ),
                   ),
                 ),

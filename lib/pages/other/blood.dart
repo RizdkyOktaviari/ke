@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/auth_provider.dart';
 import '../../helpers/providers/blood_provider.dart';
 import '../../models/blood_model.dart';
@@ -54,10 +55,12 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Blood Pressure'),
+        title: Text(localizations!.bloodPressureTitle),
         backgroundColor: Colors.blueAccent,
       ),
       body: Consumer<BloodPressureProvider>(
@@ -72,9 +75,9 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Check your blood pressure!",
-                    style: TextStyle(fontSize: 16),
+                  Text(
+                    localizations.checkBloodPressure,
+                    style: const TextStyle(fontSize: 16),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 16.0),
@@ -101,9 +104,9 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                   Center(
                     child: ElevatedButton(
                       onPressed: _submitBloodPressure,
-                      child: const Text(
-                        'Save',
-                        style: TextStyle(color: Colors.white),
+                      child: Text(
+                        localizations.save,
+                        style: const TextStyle(color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent

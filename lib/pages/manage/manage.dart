@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/auth_provider.dart';
 import '../../helpers/providers/recipe_provider.dart';
 import '../../models/resep_model.dart';
@@ -33,12 +34,13 @@ class _ManagePageContentState extends State<_ManagePageContent> {
   final _massController = TextEditingController();
 
   Future<void> _saveRecipe() async {
+    final localizations = AppLocalizations.of(context);
     try {
       // Validasi input
       if (_foodNameController.text.isEmpty ||
           _descriptionController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Masukkan nama dan deskripsi makanan')),
+          SnackBar(content:Text(localizations!.enterNameAndDescription)),
         );
         return;
       }
@@ -46,7 +48,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
       final token = Provider.of<AuthProvider>(context, listen: false).token;
       if (token == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Not authenticated')),
+          SnackBar(content: Text(localizations!.notAuthenticated)),
         );
         return;
       }
@@ -70,7 +72,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Resep berhasil ditambahkan')),
+          SnackBar(content: Text(localizations!.recipeAddedSuccessfully)),
         );
         Navigator.pop(context);
       } else {
@@ -93,13 +95,13 @@ class _ManagePageContentState extends State<_ManagePageContent> {
   @override
   Widget build(BuildContext context) {
     final recipeProvider = Provider.of<RecipeProvider>(context);
-
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          'Tambah Resep',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          localizations!.addRecipePage,
+          style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blueAccent,
       ),
@@ -112,7 +114,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
               TextField(
                 controller: _foodNameController,
                 decoration: InputDecoration(
-                  labelText: 'Nama Makanan',
+                  labelText: localizations.foodName,
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -120,7 +122,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
               TextField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'Deskripsi',
+                  labelText: localizations.description,
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
@@ -129,12 +131,12 @@ class _ManagePageContentState extends State<_ManagePageContent> {
               TextField(
                 controller: _portionController,
                 decoration: InputDecoration(
-                  labelText: 'Porsi',
+                  labelText: localizations.portion,
                   border: OutlineInputBorder(),
                 ),
               ),
               SizedBox(height: 16),
-              Text('Lemak'),
+              Text(localizations.fat),
               TextField(
                 controller: _fatController,
                 keyboardType: TextInputType.number,
@@ -144,7 +146,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
                 ),
               ),
               SizedBox(height: 16),
-              Text('Protein'),
+              Text(localizations.protein),
               TextField(
                 controller: _proteinController,
                 keyboardType: TextInputType.number,
@@ -154,7 +156,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
                 ),
               ),
               SizedBox(height: 16),
-              Text('Karbohidrat'),
+              Text(localizations.carbohydrate),
               TextField(
                 controller: _carbsController,
                 keyboardType: TextInputType.number,
@@ -164,7 +166,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
                 ),
               ),
               SizedBox(height: 16),
-              Text('Gula'),
+              Text(localizations.sugar),
               TextField(
                 controller: _sugarController,
                 keyboardType: TextInputType.number,
@@ -174,7 +176,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
                 ),
               ),
               SizedBox(height: 16),
-              Text('Kolesterol (mg)'),
+              Text(localizations.cholesterolInMg),
               TextField(
                 controller: _cholesterolController,
                 keyboardType: TextInputType.number,
@@ -184,7 +186,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
                 ),
               ),
               SizedBox(height: 16),
-              Text('Berat (g)'),
+              Text(localizations.weightInG),
               TextField(
                 controller: _massController,
                 keyboardType: TextInputType.number,
@@ -207,7 +209,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
                           recipeProvider.fileName.isEmpty
-                              ? 'No file chosen'
+                              ? localizations.noFileChosen
                               : recipeProvider.fileName,
                           style: TextStyle(fontSize: 16),
                           overflow: TextOverflow.ellipsis,
@@ -218,7 +220,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
                   SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: recipeProvider.getImage,
-                    child: Text('Choose File'),
+                    child: Text(localizations.chooseFile),
                   ),
                 ],
               ),
@@ -241,7 +243,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
                   ),
                   onPressed: _saveRecipe,
                   child: Text(
-                    'Simpan',
+                    localizations.save,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/recap_provider.dart';
 import '../../models/recap_model.dart';
 
@@ -19,9 +20,11 @@ class _RecapListPageState extends State<RecapListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Rekapan Harian'),
+        title: Text(localizations!.dailyRecap),
         backgroundColor: Colors.blue,
       ),
       body: Consumer<RecapProvider>(
@@ -39,7 +42,7 @@ class _RecapListPageState extends State<RecapListPage> {
             itemCount: recapProvider.recaps.length,
             itemBuilder: (context, index) {
               final recap = recapProvider.recaps[index];
-              return _buildRecapCard(recap);
+              return _buildRecapCard(recap, localizations);
             },
           );
         },
@@ -47,7 +50,7 @@ class _RecapListPageState extends State<RecapListPage> {
     );
   }
 
-  Widget _buildRecapCard(RecapModel recap) {
+  Widget _buildRecapCard(RecapModel recap, AppLocalizations localizations) {
     return Card(
       elevation: 4,
       margin: EdgeInsets.only(bottom: 16),
@@ -74,7 +77,7 @@ class _RecapListPageState extends State<RecapListPage> {
 
               // Catatan Makanan
               _buildSection(
-                'Catatan Makanan:',
+                localizations.foodNotes,
                 Icons.restaurant,
                 Colors.orange,
                 Column(
@@ -83,7 +86,7 @@ class _RecapListPageState extends State<RecapListPage> {
                     ...recap.foodLogs.foods.map((food) => Text('${food.foodName}: ${food.calories} kcal')),
                     Divider(),
                     Text(
-                      'Total Kalori: ${recap.foodLogs.totalCalories}',
+                      '${localizations.totalCaloriesConsumed} ${recap.foodLogs.totalCalories}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -92,7 +95,7 @@ class _RecapListPageState extends State<RecapListPage> {
 
               // Catatan Minum
               _buildSection(
-                'Catatan Minum:',
+                localizations.drinkNotes,
                 Icons.local_drink,
                 Colors.blue,
                 Text(recap.drinkLogs),
@@ -100,7 +103,7 @@ class _RecapListPageState extends State<RecapListPage> {
 
               // Aktivitas Fisik
               _buildSection(
-                'Aktivitas Fisik:',
+                localizations.physicalActivity,
                 Icons.directions_run,
                 Colors.green,
                 Column(
@@ -114,7 +117,7 @@ class _RecapListPageState extends State<RecapListPage> {
               // Tekanan Darah
               if (recap.bloodPressure.isNotEmpty)
                 _buildSection(
-                  'Tekanan Darah:',
+                  localizations.bloodPressureNote,
                   Icons.favorite,
                   Colors.red,
                   Column(
@@ -127,7 +130,7 @@ class _RecapListPageState extends State<RecapListPage> {
 
               // Obat yang Dikonsumsi
               _buildSection(
-                'Obat Dikonsumsi:',
+                localizations.medicineTaken,
                 Icons.medical_services,
                 Colors.purple,
                 Column(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/auth_provider.dart';
 import '../../helpers/providers/knowledge_provider.dart';
 import 'detail.dart';
@@ -26,9 +27,10 @@ class _PenyakitListPageState extends State<PenyakitListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daftar Penyakit'),
+        title: Text(localizations!.diseaseMenu),
         backgroundColor: Colors.blueAccent,
       ),
       body: Consumer<KnowledgeProvider>(

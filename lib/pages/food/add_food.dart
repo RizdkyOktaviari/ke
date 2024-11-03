@@ -1,6 +1,8 @@
 // add food page
 import 'package:flutter/material.dart';
 
+import '../../helpers/app_localizations.dart';
+
 class AddFoodPage extends StatefulWidget {
   const AddFoodPage({super.key});
 
@@ -14,9 +16,10 @@ class AddFoodPageState extends State<AddFoodPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Food'),
+        title: Text(localizations!.addFood),
         backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
@@ -26,7 +29,7 @@ class AddFoodPageState extends State<AddFoodPage> {
             TextField(
               controller: nameController,
               decoration: InputDecoration(
-                hintText: 'Food name',
+                hintText: localizations!.addFood,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -34,7 +37,7 @@ class AddFoodPageState extends State<AddFoodPage> {
             TextField(
               controller: caloriesController,
               decoration: InputDecoration(
-                hintText: 'Calories',
+                hintText: localizations!.calories,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -52,7 +55,7 @@ class AddFoodPageState extends State<AddFoodPage> {
                 Navigator.pop(context);
               },
               child: Text(
-                'Add Food',
+                localizations!.addFood,
                 style: TextStyle(fontSize: 18, color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(

@@ -1,5 +1,6 @@
 // widgets/recipe_card.dart
 import 'package:flutter/material.dart';
+import '../../helpers/app_localizations.dart';
 import '../../models/resep_model.dart';
 
 class RecipeCard extends StatelessWidget {
@@ -12,6 +13,7 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Card(
       margin: EdgeInsets.all(8),
       child: Column(
@@ -40,22 +42,22 @@ class RecipeCard extends StatelessWidget {
                   recipe.foodName ?? 'No Name',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                Text('${recipe.portion ?? 'N/A'} portion | ${recipe.foodType ?? 'N/A'}'),
+                Text('${recipe.portion ?? 'N/A'} ${localizations!.portion}  | ${recipe.foodType ?? 'N/A'}'),
                 Text(
-                  recipe.description ?? 'No description available',
+                  recipe.description ?? localizations.noDescriptionAvailable,
                   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
                 SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    NutritionInfo(label: 'Fat', value: '${recipe.fat ?? 0} g'),
+                    NutritionInfo(label: localizations.fat, value: '${recipe.fat ?? 0} g'),
                     NutritionInfo(
-                        label: 'Carbs', value: '${recipe.carbohydrate ?? 0} g'),
+                        label: localizations.carbs, value: '${recipe.carbohydrate ?? 0} g'),
                     NutritionInfo(
-                        label: 'Protein', value: '${recipe.protein ?? 0} g'),
+                        label: localizations.protein, value: '${recipe.protein ?? 0} g'),
                     NutritionInfo(
-                        label: 'Cal', value: '${recipe.calories ?? 0}'),
+                        label: localizations.cal, value: '${recipe.calories ?? 0}'),
                   ],
                 ),
                 SizedBox(height: 4),
@@ -64,7 +66,7 @@ class RecipeCard extends StatelessWidget {
                     children: [
                       Text('${recipe.cholesterol ?? 0} mg',
                           style: TextStyle(color: Colors.blue)),
-                      Text('Cholesterol',
+                      Text(localizations.cholesterol,
                           style: TextStyle(color: Colors.black)),
                     ],
                   ),

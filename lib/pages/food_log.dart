@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:kesehatan_mobile/pages/obat/home_add_obat.dart';
 import 'package:provider/provider.dart';
+import '../helpers/app_localizations.dart';
 import '../helpers/providers/food_log_provider.dart';
 import '../models/recap_model.dart';
 import 'food/home_food_menu.dart';
@@ -24,8 +25,20 @@ class FoodLogPageState extends State<FoodLogPage> {
   double totalExerciseCalories = 0;
   double totalWater = 0;
   double totalBlood = 0;
-  double totalMedicine = 0;
+  String totalMedicine = '';
   String notes = '';
+  bool _isInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_isInitialized) {
+        updateStateFromProvider();
+        _isInitialized = true;
+      }
+    });
+  }
 
   // Method untuk update state dari provider
   void updateStateFromProvider() {
@@ -83,6 +96,7 @@ class FoodLogPageState extends State<FoodLogPage> {
       totalExerciseCalories = 0;
       totalWater = 0;
       notes = '';
+      totalMedicine = '';
       // Reset provider juga
       Provider.of<FoodLogProvider>(context, listen: false).reset();
     });
@@ -90,11 +104,19 @@ class FoodLogPageState extends State<FoodLogPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Consumer<FoodLogProvider>(
       builder: (context, provider, child) {
         if (provider.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
+        final mealTypes = {
+          'Breakfast': l10n.breakfast,
+          'Lunch': l10n.lunch,
+          'Dinner': l10n.dinner,
+          'Snacks': l10n.snacks,
+        };
+
 
         // Update state ketika tanggal berubah
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -104,10 +126,9 @@ class FoodLogPageState extends State<FoodLogPage> {
         return ListView(
           padding: const EdgeInsets.all(16.0),
           children: <Widget>[
-            _buildMealCard('Breakfast'),
-            _buildMealCard('Lunch'),
-            _buildMealCard('Dinner'),
-            _buildMealCard('Snacks'),
+            ...mealTypes.entries.map((entry) =>
+                _buildMealCard(entry.value, entry.key)
+            ),
             const SizedBox(height: 20),
             _buildSummaryCard(),
             const SizedBox(height: 20),
@@ -118,16 +139,17 @@ class FoodLogPageState extends State<FoodLogPage> {
     );
   }
 
-  Widget _buildMealCard(String mealType) {
+  Widget _buildMealCard(String displayName, String mealType) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 4,
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
         title: Text(
-          mealType,
+          displayName,
           style: const TextStyle(fontSize: 20, color: Colors.blueAccent),
         ),
-        subtitle: Text('${widget.foodEntries[mealType]} kcal'),
+        subtitle: Text('${widget.foodEntries[mealType]} ${l10n.kcal}'),
         trailing: IconButton(
           icon: const Icon(Icons.add),
           onPressed: () => _showMealMenu(mealType),
@@ -158,45 +180,52 @@ class FoodLogPageState extends State<FoodLogPage> {
   }
 
   Widget _buildSummaryCard() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 4,
       child: ListTile(
-        title: const Text(
-          'Total Calories Consumed',
+        title: Text(
+          l10n.totalCaloriesConsumed,
           style: TextStyle(fontSize: 20, color: Colors.blueAccent),
         ),
-        subtitle: Text('$totalCalories kcal'),
+        subtitle: Text('$totalCalories ${l10n.kcal}'),
       ),
     );
   }
 
+
   Widget _buildOtherSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-            'Other',
+        Text(
+            l10n.other,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
         ),
         _buildOtherItem(
-          'Exercise',
-          '$totalExerciseCalories kCal',
+          l10n.exercise,
+          '$totalExerciseCalories ${l10n.kcal}',
           _addExerciseEntry,
         ),
         _buildOtherItem(
-          'Water',
-          '$totalWater oz',
+          l10n.water,
+          '$totalWater ${l10n.oz}',
           _addWaterEntry,
         ),
         _buildOtherItem(
-          'Blood Pressure',
+          l10n.bloodPressure,
           '$totalBlood',
           _addBloodPressure,
         ),
-        _buildOtherItem('Medicine', '$totalMedicine', _addMedicine),
         _buildOtherItem(
-          'Notes',
-          notes.isEmpty ? 'No notes yet' : notes,
+            l10n.medicine,
+            totalMedicine.isEmpty ? l10n.noNotesYet : totalMedicine,
+            _addMedicine
+        ),
+        _buildOtherItem(
+          l10n.notes,
+          notes.isEmpty ? l10n.noNotesYet : notes,
           _addNoteEntry,
         ),
       ],

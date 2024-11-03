@@ -5,5 +5,227 @@
   "password": "Kata Sandi",
   "forgotPassword": "Lupa Kata Sandi?",
   "login": "Masuk",
-  "dontHaveAnAccountsignUp": "Belum punya akun?, Daftar"
+  "dontHaveAnAccountSignUp": "Belum punya akun?, Daftar",
+
+  "createAccount": "Buat Akun",
+  "signUpToGetStarted": "Daftar untuk memulai",
+  "name": "Nama",
+  "age": "Usia",
+  "gender": "Jenis Kelamin",
+  "education": "Pendidikan",
+  "occupation": "Pekerjaan",
+  "howLongHaveYouHadHypertension": "Sudah berapa lama Anda mengalami hipertensi?",
+  "phone": "Telepon",
+  "bloodPressure": "Tekanan Darah",
+  "SignUp": "Daftar",
+  "alreadyHaveAnAccountLogin": "Sudah punya akun?, Masuk",
+
+  "log": "Catatan",
+  "diseaseMenu": "Menu Penyakit",
+  "disease": "Penyakit",
+  "diseaseInformation": "Informasi Penyakit",
+  "exit": "Keluar",
+  "confirmExit": "Konfirmasi Keluar",
+  "areYouSureYouWantToExit": "Apakah Anda yakin ingin keluar?",
+  "cancel": "Batal",
+  "yes": "Ya"
+
+  "registrationSuccess": "Registrasi berhasil",
+    "allFieldsRequired": "Semua field harus diisi",
+    "passwordsDoNotMatch": "Password tidak sama",
+    "notificationSettings": "Pengaturan Notifikasi",
+    "physicalActivityName": "Nama Aktivitas Fisik",
+    "physicalActivityTime": "Waktu Aktivitas Fisik",
+    "medicine": "Minum Obat",
+    "medicineName": "Nama Obat",
+    "timesPerDay": "Berapa kali sehari",
+    "times": "kali",
+    "male": "Pria",
+    "female": "Wanita",
+    "bloodPressureNote": "Catatan tekanan darah pertama kali",
+    "username": "Username",
+    "confirmPassword": "Konfirmasi Password",
+    "dateOfBirth": "Tanggal Lahir (YYYY-MM-DD)"
+
+     "breakfast": "Sarapan",
+      "lunch": "Makan Siang",
+      "dinner": "Makan Malam",
+      "snacks": "Cemilan",
+      "kcal": "kkal",
+      "totalCaloriesConsumed": "Total Kalori yang Dikonsumsi",
+      "other": "Lainnya",
+      "exercise": "Olahraga",
+      "water": "Air",
+      "oz": "oz",
+      "bloodPressure": "Tekanan Darah",
+      "medicine": "Obat",
+      "notes": "Catatan",
+      "noNotesYet": "Belum ada catatan",
+       "log": "Log",
+       "menu": "Menu Penyakit",
+            "knowledge": "Pengetahuan",
+            "recipe": "Resep",
+            "manage": "Kelola",
+            "summary": "Rekapan',
+            "chat": "Chat",
+            "reminder": "Pengingat",
+            "exit": "Keluar",
+            "exitConfirmTitle": "Konfirmasi Keluar",
+            "exitConfirmMessage": "Apakah Anda yakin ingin keluar dan kembali ke halaman login?",
+            "cancel': 'Batal",
+            "diseases": "Penyakit",
+            "selfManagement": "Manajemen Diri",
+             "addFood": "Tambah Makanan",
+              "foodName": "Nama Makanan",
+              "calories": "Kalori",
+              "recommendedPortionTable": "Tabel Porsi yang Direkomendasikan",
+              "addMenu": "Tambah Menu"
+              "searchFood": "Cari makanan...",
+                "noSearchResults": "Tidak ada hasil pencarian",
+                "fat": "Lemak",
+                "totalCarbs": "Total Karbohidrat",
+                "protein": "Protein",
+                "addRecipe": "Tambah Resep +",
+                "createRecipe": "Buat Resep +",
+                "recipeAddedSuccessfully": "Resep berhasil ditambahkan"
+                 "exercise": "Olahraga",
+                  "exerciseInstructions": "Masukkan berat badan, durasi olahraga, dan aktivitas untuk memperkirakan pengeluaran energi Anda",
+                  "weightInKg": "Berat (kg)",
+                  "enterWeightInKg": "Masukkan berat dalam kg",
+                  "durationInMinutes": "Durasi (menit)",
+                  "enterDurationInMinutes": "Masukkan durasi dalam menit",
+                  "distanceInMeters": "Jarak (meter)",
+                  "enterDistanceInMeters": "Masukkan jarak dalam meter",
+                  "exerciseType": "Jenis Olahraga",
+                  "calculateAndAdd": "Hitung dan Tambah",
+                  "notAuthenticated": "Belum terautentikasi",
+                  "failedToAddExercise": "Gagal menambahkan olahraga",
+                  "rowingMachineIntense": "Mesin Dayung (Intens)",
+                  "lowImpactExercise": "Olahraga Dampak Rendah",
+                  "running": "Berlari",
+                  "cycling": "Bersepeda",
+                  "swimming": "Berenang",
+                  "walking": "Berjalan"
+                   "waterIntake": "Asupan Air",
+                    "enterWaterConsumed": "Masukkan jumlah air yang diminum (dalam ml):",
+                    "enterWaterInMl": "Masukkan jumlah air dalam ml",
+                    "addWaterIntake": "Tambah Asupan Air",
+                    "failedToAddWaterIntake": "Gagal menambahkan asupan air",
+                    "water": "Air",
+
+                    // Blood Pressure translations
+                      "bloodPressureTitle": "Tekanan Darah",
+                      "checkBloodPressure": "Periksa tekanan darah Anda!",
+                      "systolic": "Sistolik",
+                      "diastolic": "Diastolik",
+                      "save": "Simpan",
+                      "enterValidNumbers": "Mohon masukkan angka yang valid",
+                      "failedToSaveBloodPressure": "Gagal menyimpan tekanan darah",
+
+                      // Notes translations
+                      "notes": "Catatan",
+                      "noteTitle": "Judul:",
+                      "noteContent": "Isi:",
+                      "enterNoteTitle": "Masukkan judul catatan",
+                      "enterNoteContent": "Masukkan catatan Anda",
+                      "addNote": "Tambah Catatan",
+                      "fillAllFields": "Mohon isi semua kolom",
+                      "failedToAddNote": "Gagal menambahkan catatan"
+
+                      // Medicine Card
+                        "usageRules": "Aturan Pakai:",
+                        "description": "Deskripsi:",
+                        "indications": "Indikasi:",
+                        "warnings": "Peringatan:",
+                        "add": "TAMBAH",
+                        "medicineAddedSuccessfully": "Obat berhasil ditambahkan",
+                        "failedToAddMedicine": "Gagal menambahkan obat",
+
+                        // Recipe Card
+                        "portion": "porsi",
+                        "noName": "Tanpa Nama",
+                        "noDescriptionAvailable": "Tidak ada deskripsi",
+                        "carbs": "Karbohidrat",
+                        "cal": "Kal",
+                        "cholesterol": "Kolesterol",
+
+                        // Home Add Obat
+                        "recordDailyMedicines": "Catat obat harian Anda!",
+                        "addMedicine": "Tambah Obat",
+                        "medicine": "Obat"
+                         "dailyRecap": "Rekapan Harian",
+                          "foodNotes": "Catatan Makanan:",
+                          "drinkNotes": "Catatan Minum:",
+                          "physicalActivity": "Aktivitas Fisik:",
+                          "bloodPressureNotes": "Tekanan Darah:",
+                          "medicineTaken": "Obat Dikonsumsi:",
+                          "totalCalories": "Total Kalori: {calories}",
+                          "@totalCalories": {
+                            "placeholders": {
+                              "calories": {
+                                "type": "num"
+                              }
+                            }
+                          }
+
+                          "addRecipePage": "Tambah Resep",
+                            "enterNameAndDescription": "Masukkan nama dan deskripsi makanan",
+                            "foodName": "Nama Makanan",
+                            "description": "Deskripsi",
+                            "portion": "Porsi",
+                            "fat": "Lemak",
+                            "protein": "Protein",
+                            "carbohydrate": "Karbohidrat",
+                            "sugar": "Gula",
+                            "cholesterolInMg": "Kolesterol (mg)",
+                            "weightInG": "Berat (g)",
+                            "noFileChosen": "Tidak ada file dipilih",
+                            "chooseFile": "Pilih File",
+                            "save": "Simpan",
+                            "recipeAddedSuccessfully": "Resep berhasil ditambahkan"
+                            "reminder": "Pengingat",
+                              "reminderDelay": "Atur notifikasi hanya setelah 21 Hari dari akun dibuat",
+                              "enterReminderMessage": "Masukkan pesan reminder",
+                              "addReminderFor": "Tambah Pengingat {type}",
+                              "@addReminderFor": {
+                                "placeholders": {
+                                  "type": {
+                                    "type": "String"
+                                  }
+                                }
+                              },
+                              "selectTime": "Pilih Waktu",
+                              "time": "Waktu: {time}",
+                              "@time": {
+                                "placeholders": {
+                                  "time": {
+                                    "type": "String"
+                                  }
+                                }
+                              },
+                              "selectDate": "Pilih Tanggal",
+                              "date": "Tanggal: {date}",
+                              "@date": {
+                                "placeholders": {
+                                  "date": {
+                                    "type": "String"
+                                  }
+                                }
+                              },
+                              "reminderMessage": "Pesan Pengingat",
+                              "saveReminder": "Simpan Pengingat",
+                              "reminderAddedSuccessfully": "Reminder berhasil ditambahkan",
+                              "failedToAddReminder": "Gagal menambahkan reminder",
+                              "addReminder": "Tambah Pengingat",
+
+                              "breakfastpic": "🍳 Sarapan",
+                              "lunchpic": "🥗 Makan Siang",
+                              "dinnerpic": "🥣 Makan Malam",
+                              "snackspic": "🍪 Cemilan",
+                              "drinkpic": "🥤 Minum",
+                              "physicalActivitypic": "🏃 Aktivitas Fisik",
+                              "takeMedicinepic": "💊 Minum Obat",
+                              "readKnowledgepic": "📚 Membaca Pengetahuan"
+
+
 }

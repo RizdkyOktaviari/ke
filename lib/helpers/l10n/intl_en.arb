@@ -28,5 +28,208 @@
   "confirmExit": "Confirm Exit",
   "areYouSureYouWantToExit": "Are you sure you want to exit?",
   "cancel": "Cancel",
-  "yes": "Yes",
+  "yes": "Yes"
+   "registrationSuccess": "Registration successful",
+    "allFieldsRequired": "All fields are required",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "notificationSettings": "Notification Settings",
+    "physicalActivityName": "Physical Activity Name",
+    "physicalActivityTime": "Physical Activity Time",
+    "medicine": "Medicine",
+    "medicineName": "Medicine Name",
+    "timesPerDay": "Times per day",
+    "times": "times",
+    "male": "Male",
+    "female": "Female",
+    "bloodPressureNote": "Blood pressure initial note",
+    "username": "Username",
+    "confirmPassword": "Confirm Password",
+    "dateOfBirth": "Date of Birth (YYYY-MM-DD)"
+
+    "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "snacks": "Snacks",
+      "kcal": "kcal",
+      "totalCaloriesConsumed": "Total Calories Consumed",
+      "other": "Other",
+      "exercise": "Exercise",
+      "water": "Water",
+      "oz": "oz",
+      "bloodPressure": "Blood Pressure",
+      "medicine": "Medicine",
+      "notes": "Notes",
+      "noNotesYet": "No notes yet"
+
+     "log": "Log",
+          "menu": "Menu",
+          "knowledge": "Knowledge",
+          "recipe": "Recipe",
+          "manage": "Manage",
+          "summary": "Summary",
+          "medicine": "Medicine",
+          "chat": "Chat",
+          "reminder": "Reminder",
+          "exit": "Exit",
+          "exitConfirmTitle": "Confirm Exit",
+          "exitConfirmMessage": "Are you sure you want to exit and return to login page?",
+          "cancel": "Cancel",
+          "diseases": "Diseases",
+          "selfManagement": "Self Management",
+           "addFood": "Add Food",
+            "foodName": "Food name",
+            "calories": "Calories",
+            "recommendedPortionTable": "Recommended Portion Table",
+            "addMenu": "Add Menu"
+            "searchFood": "Search food...",
+              "noSearchResults": "No search results",
+              "fat": "Fat",
+              "totalCarbs": "Total Carbs",
+              "protein": "Protein",
+              "addRecipe": "Add Recipe +",
+              "createRecipe": "Create Recipe +",
+              "recipeAddedSuccessfully": "Recipe added successfully"
+               "exercise": "Exercise",
+                "exerciseInstructions": "Enter your weight, exercise duration, and the activity to estimate your energy expenditure",
+                "weightInKg": "Weight (kg)",
+                "enterWeightInKg": "Enter weight in kg",
+                "durationInMinutes": "Duration (minutes)",
+                "enterDurationInMinutes": "Enter duration in minutes",
+                "distanceInMeters": "Distance (meters)",
+                "enterDistanceInMeters": "Enter distance in meters",
+                "exerciseType": "Exercise Type",
+                "calculateAndAdd": "Calculate and Add",
+                "notAuthenticated": "Not authenticated",
+                "failedToAddExercise": "Failed to add exercise",
+                "rowingMachineIntense": "Rowing Machine (Intense)",
+                "lowImpactExercise": "Low Impact Exercise",
+                "running": "Running",
+                "cycling": "Cycling",
+                "swimming": "Swimming",
+                "walking": "Walking"
+                 "waterIntake": "Water Intake",
+                  "enterWaterConsumed": "Enter the amount of water consumed (in ml):",
+                  "enterWaterInMl": "Enter water in ml",
+                  "addWaterIntake": "Add Water Intake",
+                  "failedToAddWaterIntake": "Failed to add water intake",
+                  "water": "Water",
+                  // Blood Pressure translations
+                    "bloodPressureTitle": "Blood Pressure",
+                    "checkBloodPressure": "Check your blood pressure!",
+                    "systolic": "Systolic",
+                    "diastolic": "Diastolic",
+                    "save": "Save",
+                    "enterValidNumbers": "Please enter valid numbers",
+                    "failedToSaveBloodPressure": "Failed to save blood pressure",
+
+                    // Notes translations
+                    "notes": "Notes",
+                    "noteTitle": "Title:",
+                    "noteContent": "Content:",
+                    "enterNoteTitle": "Enter note title",
+                    "enterNoteContent": "Enter your note",
+                    "addNote": "Add Note",
+                    "fillAllFields": "Please fill in all fields",
+                    "failedToAddNote": "Failed to add note"
+
+                    // lib/l10n/intl_en.arb
+                    {
+                      "@@locale": "en",
+
+                      // Medicine Card
+                      "usageRules": "Usage Rules:",
+                      "description": "Description:",
+                      "indications": "Indications:",
+                      "warnings": "Warnings:",
+                      "add": "ADD",
+                      "medicineAddedSuccessfully": "Medicine added successfully",
+                      "failedToAddMedicine": "Failed to add medicine",
+
+                      // Recipe Card
+                      "portion": "portion",
+                      "noName": "No Name",
+                      "noDescriptionAvailable": "No description available",
+                      "carbs": "Carbs",
+                      "cal": "Cal",
+                      "cholesterol": "Cholesterol",
+
+                      // Home Add Obat
+                      "recordDailyMedicines": "Record daily medicines!",
+                      "addMedicine": "Add Medicine",
+                      "medicine": "Medicine"
+
+                      "dailyRecap": "Daily Recap",
+                        "foodNotes": "Food Notes:",
+                        "drinkNotes": "Drink Notes:",
+                        "physicalActivity": "Physical Activity:",
+                        "bloodPressureNotes": "Blood Pressure:",
+                        "medicineTaken": "Medicine Taken:",
+                        "totalCalories": "Total Calories: {calories}",
+                        "@totalCalories": {
+                          "placeholders": {
+                            "calories": {
+                              "type": "num"
+                            }
+                          }
+                        }
+                         // Manage Page
+                          "addRecipePage": "Add Recipe",
+                          "enterNameAndDescription": "Please enter food name and description",
+                          "foodName": "Food Name",
+                          "description": "Description",
+                          "portion": "Portion",
+                          "fat": "Fat",
+                          "protein": "Protein",
+                          "carbohydrate": "Carbohydrate",
+                          "sugar": "Sugar",
+                          "cholesterolInMg": "Cholesterol (mg)",
+                          "weightInG": "Weight (g)",
+                          "noFileChosen": "No file chosen",
+                          "chooseFile": "Choose File",
+                          "save": "Save",
+                          "recipeAddedSuccessfully": "Recipe added successfully"
+
+                           "reminder": "Reminder",
+                            "reminderDelay": "Set notifications only after 21 days from account creation",
+                            "enterReminderMessage": "Enter reminder message",
+                            "addReminderFor": "Add Reminder for {type}",
+                            "@addReminderFor": {
+                              "placeholders": {
+                                "type": {
+                                  "type": "String"
+                                }
+                              }
+                            },
+                            "selectTime": "Select Time",
+                            "time": "Time: {time}",
+                            "@time": {
+                              "placeholders": {
+                                "time": {
+                                  "type": "String"
+                                }
+                              }
+                            },
+                            "selectDate": "Select Date",
+                            "date": "Date: {date}",
+                            "@date": {
+                              "placeholders": {
+                                "date": {
+                                  "type": "String"
+                                }
+                              }
+                            },
+                            "reminderMessage": "Reminder Message",
+                            "saveReminder": "Save Reminder",
+                            "reminderAddedSuccessfully": "Reminder added successfully",
+                            "failedToAddReminder": "Failed to add reminder",
+                            "addReminder": "Add Reminder",
+
+                            "breakfastpic": "🍳 Breakfast",
+                            "lunchpic": "🥗 Lunch",
+                            "dinnerpic": "🥣 Dinner",
+                            "snackspic": "🍪 Snacks",
+                            "drinkpic": "🥤 Drink",
+                            "physicalActivitypic": "🏃 Physical Activity",
+                            "takeMedicinepic": "💊 Take Medicine",
+                            "readKnowledgepic": "📚 Read Knowledge"
 }

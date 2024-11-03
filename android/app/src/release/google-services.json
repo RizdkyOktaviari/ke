@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "102535343335",
+    "project_id": "health-app-6cc60",
+    "storage_bucket": "health-app-6cc60.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102535343335:android:f36ad9fd9a9c309d2dc642",
+        "android_client_info": {
+          "package_name": "com.example.kesehatan_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDin7wVkXx4XTbpO79hkC3jGM68p31bxCM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

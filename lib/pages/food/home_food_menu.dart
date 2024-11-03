@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import '../../helpers/app_localizations.dart';
 import '../penyakit/search_food.dart';
 
 class MealMenuPage extends StatefulWidget {
@@ -36,16 +37,35 @@ class _MealMenuPageState extends State<MealMenuPage> {
       ),
     );
   }
+  String _getMealTypeLocalized(BuildContext context, String mealType) {
+    final localizations = AppLocalizations.of(context);
+    switch (mealType.toLowerCase()) {
+      case 'breakfast':
+        return localizations!.breakfast;
+      case 'lunch':
+        return localizations!.lunch;
+      case 'dinner':
+        return localizations!.dinner;
+      case 'snacks':
+        return localizations!.snacks;
+      default:
+        return mealType;
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    final localizedMealType = _getMealTypeLocalized(context, widget.mealType);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('Menu ${widget.mealType}'),
+        title: Text('Menu ${localizedMealType} '),
         backgroundColor: Colors.blue,
       ),
       body: SingleChildScrollView(
@@ -115,7 +135,7 @@ class _MealMenuPageState extends State<MealMenuPage> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                'Tabel porsi yang direkomendasikan',
+                localizations!.recommendedPortionTable,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -130,7 +150,7 @@ class _MealMenuPageState extends State<MealMenuPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Menu ${widget.mealType}',
+                    'Menu ${localizedMealType}',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -154,7 +174,7 @@ class _MealMenuPageState extends State<MealMenuPage> {
                           Icon(Icons.add, color: Colors.blue),
                           SizedBox(width: 8),
                           Text(
-                            'Tambah Menu',
+                            localizations!.addMenu,
                             style: TextStyle(
                               color: Colors.blue,
                               fontSize: 16,

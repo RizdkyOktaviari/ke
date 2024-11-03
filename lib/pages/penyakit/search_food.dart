@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/auth_provider.dart';
 import '../../helpers/providers/recipe_provider.dart';
 import '../../models/resep_model.dart';
@@ -44,6 +45,21 @@ class _SearchFoodPageState extends State<SearchFoodPage> {
         return mealType.toLowerCase();
     }
   }
+  String _getLocalizedMealType(BuildContext context, String mealType) {
+    final localizations = AppLocalizations.of(context);
+    switch (mealType.toLowerCase()) {
+      case 'breakfast':
+        return localizations!.breakfast;
+      case 'lunch':
+        return localizations!.lunch;
+      case 'dinner':
+        return localizations!.dinner;
+      case 'snacks':
+        return localizations!.snacks;
+      default:
+        return mealType;
+    }
+  }
 
   Future<void> _handleAddRecipe(Recipe recipe, String token) async {
     if (recipe.id == null) return;
@@ -71,10 +87,11 @@ class _SearchFoodPageState extends State<SearchFoodPage> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final foodType = _getFoodType(widget.mealType);
-
+    final localizations = AppLocalizations.of(context);
+    final localizedMealType = _getLocalizedMealType(context, widget.mealType);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search ${widget.mealType}'),
+        title:Text(localizations!.searchMeal(localizedMealType)),
         backgroundColor: Colors.blue,
         elevation: 0,
       ),
@@ -84,7 +101,7 @@ class _SearchFoodPageState extends State<SearchFoodPage> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search food...',
+                hintText: localizations!.searchFood,
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
@@ -167,15 +184,15 @@ class _SearchFoodPageState extends State<SearchFoodPage> {
                             Row(
                               children: [
                                 Text(
-                                  'Fat: ${recipe.fat?.toString() ?? "0"}g | ',
+                                  '${localizations.fat}: ${recipe.fat?.toString() ?? "0"}g | ',
                                   style: TextStyle(fontSize: 12),
                                 ),
                                 Text(
-                                  'Total Carbs: ${recipe.carbohydrate?.toString() ?? "0"}g | ',
+                                  '${localizations.totalCarbs}: ${recipe.carbohydrate?.toString() ?? "0"}g | ',
                                   style: TextStyle(fontSize: 12),
                                 ),
                                 Text(
-                                  'Protein: ${recipe.protein?.toString() ?? "0"}g',
+                                  '${localizations.protein}: ${recipe.protein?.toString() ?? "0"}g',
                                   style: TextStyle(fontSize: 12),
                                 ),
                               ],
@@ -194,7 +211,7 @@ class _SearchFoodPageState extends State<SearchFoodPage> {
                             authProvider.token ?? '',
                           ),
                           child: Text(
-                            'Add Recipe +',
+                            localizations.addRecipe,
                             style: TextStyle(color: Colors.white),
                           ),
                           style: ElevatedButton.styleFrom(
@@ -222,7 +239,7 @@ class _SearchFoodPageState extends State<SearchFoodPage> {
           );
         },
         label: Text(
-          'Create Recipe +',
+          localizations.createRecipe,
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
