@@ -1,0 +1,228 @@
+{
+  "@@last_modified": "2024-11-02T16:44:00.478412",
+  "welcomeBack": "Welcome Back!",
+  "@welcomeBack": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginToYourAccount": "Login to your account",
+  "@loginToYourAccount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "email": "Email",
+  "@email": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "password": "Password",
+  "@password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "login": "Login",
+  "@login": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "dontHaveAnAccountSignUp": "Don't have an account?, Sign Up",
+  "@dontHaveAnAccountSignUp": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "createAccount": "Create Account",
+  "@createAccount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "signUpToGetStarted": "Sign up to get started",
+  "@signUpToGetStarted": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "name": "Name",
+  "@name": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "age": "Age",
+  "@age": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "gender": "Gender",
+  "@gender": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "education": "Education",
+  "@education": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "occupation": "Occupation",
+  "@occupation": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "howLongHaveYouHadHypertension": "How long have you had hypertension?",
+  "@howLongHaveYouHadHypertension": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "phone": "Phone",
+  "@phone": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "bloodPressure": "Blood Pressure",
+  "@bloodPressure": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "signUp": "Sign Up",
+  "@signUp": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "alreadyHaveAnAccountLogin": "Already have an account?, Login",
+  "@alreadyHaveAnAccountLogin": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "log": "Log",
+  "@log": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "diseaseMenu": "Disease Menu",
+  "@diseaseMenu": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "disease": "Disease",
+  "@disease": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "diseaseInformation": "Disease Information",
+  "@diseaseInformation": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "exit": "Exit",
+  "@exit": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmExit": "Confirm Exit",
+  "@confirmExit": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "areYouSureYouWantToExit": "Are you sure you want to exit?",
+  "@areYouSureYouWantToExit": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "yes": "Yes",
+  "@yes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "registrationSuccess": "Registration successful",
+  "@registrationSuccess": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "allFieldsRequired": "All fields are required",
+  "@allFieldsRequired": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordsDoNotMatch": "Passwords do not match",
+  "@passwordsDoNotMatch": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "notificationSettings": "Notification Settings",
+  "@notificationSettings": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "username": "Username",
+  "@username": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "dateOfBirth": "Date of Birth (YYYY-MM-DD)",
+  "@dateOfBirth": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "physicalActivityName": "Physical Activity Name",
+  "@physicalActivityName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "physicalActivityTime": "Physical Activity Time",
+  "@physicalActivityTime": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "medicine": "Medicine",
+  "@medicine": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "medicineName": "Medicine Name",
+  "@medicineName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "timesPerDay": "Times per day",
+  "@timesPerDay": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "times": "times",
+  "@times": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "male": "Male",
+  "@male": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "female": "Female",
+  "@female": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "bloodPressureNote": "Blood pressure initial note",
+  "@bloodPressureNote": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "alreadyHaveAccount": "Already have an account? Login",
+  "@alreadyHaveAccount": {
+    "type": "text",
+    "placeholders": {}
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kesehatan_mobile/pages/manage/manage.dart';
 import 'package:provider/provider.dart';
 
 import '../../helpers/app_localizations.dart';
@@ -235,7 +236,7 @@ class _SearchFoodPageState extends State<SearchFoodPage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddFoodPage()),
+            MaterialPageRoute(builder: (context) => ManagePage()),
           );
         },
         label: Text(

@@ -66,4 +66,6 @@ class Recipe {
       imageUrl: json['image_url'] as String?,
     );
   }
+
+
 }

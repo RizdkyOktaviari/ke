@@ -711,7 +711,157 @@ class AppLocalizations {
   String get takeMedicinepic => Intl.message('💊 Take Medicine', name: 'takeMedicinepic');
   String get readKnowledgepic => Intl.message('📚 Read Knowledge', name: 'readKnowledgepic');
 
+  String get foodType => Intl.message(
+    'Food Type',
+    name: 'foodType',
+  );
 
+  String get foodNameRequired => Intl.message(
+    'Please enter food name',
+    name: 'foodNameRequired',
+  );
+
+  String get descriptionRequired => Intl.message(
+    'Please enter description',
+    name: 'descriptionRequired',
+  );
+
+  String get portionRequired => Intl.message(
+    'Please enter portion',
+    name: 'portionRequired',
+  );
+
+  String get fatRequired => Intl.message(
+    'Please enter fat content',
+    name: 'fatRequired',
+  );
+
+  String get proteinRequired => Intl.message(
+    'Please enter protein content',
+    name: 'proteinRequired',
+  );
+
+  String get enterValidNumber => Intl.message(
+    'Please enter a valid number',
+    name: 'enterValidNumber',
+  );
+
+  String get enterNonNegativeNumber => Intl.message(
+    'Please enter a non-negative number',
+    name: 'enterNonNegativeNumber',
+  );
+
+  String get carbRequired => Intl.message('Please enter carbohydrate content', name: 'carbRequired');
+  String get sugarRequired => Intl.message('Please enter sugar content', name: 'sugarRequired');
+  String get cholesterolRequired => Intl.message('Please enter cholesterol content', name: 'cholesterolRequired');
+  String get weightRequired => Intl.message('Please enter weight content', name: 'weightRequired');
+  String get usernameRequired => Intl.message(
+    'Username is required',
+    name: 'usernameRequired',
+  );
+
+  String get usernameTooShort => Intl.message(
+    'Username must be at least 4 characters',
+    name: 'usernameTooShort',
+  );
+
+  String get passwordRequired => Intl.message(
+    'Password is required',
+    name: 'passwordRequired',
+  );
+
+  String get passwordTooShort => Intl.message(
+    'Password must be at least 6 characters',
+    name: 'passwordTooShort',
+  );
+
+  String get confirmPasswordRequired => Intl.message(
+    'Please confirm your password',
+    name: 'confirmPasswordRequired',
+  );
+
+  String get birthDateRequired => Intl.message(
+    'Birth date is required',
+    name: 'birthDateRequired',
+  );
+
+  String get invalidDateFormat => Intl.message(
+    'Invalid date format (YYYY-MM-DD)',
+    name: 'invalidDateFormat',
+  );
+
+  String get phoneRequired => Intl.message(
+    'Phone number is required',
+    name: 'phoneRequired',
+  );
+
+  String get invalidPhoneFormat => Intl.message(
+    'Invalid phone number format',
+    name: 'invalidPhoneFormat',
+  );
+
+  String get durationRequired => Intl.message(
+    'Duration is required',
+    name: 'durationRequired',
+  );
+
+  String get invalidNumberFormat => Intl.message(
+    'Please enter a valid number',
+    name: 'invalidNumberFormat',
+  );
+
+  String get registrationFailed => Intl.message(
+    'Registration failed. Please try again.',
+    name: 'registrationFailed',
+  );
+
+  String get unexpectedError => Intl.message(
+    'An unexpected error occurred. Please try again.',
+    name: 'unexpectedError',
+  );
+
+  String get nameRequired => Intl.message(
+    'Name is required',
+    name: 'nameRequired',
+  );
+  String get nameTooShort => Intl.message(
+    'Name must be at least 3 characters',
+    name: 'nameTooShort',
+  );
+  String get educationRequired => Intl.message(
+    'Education is required',
+    name: 'educationRequired',
+  );
+
+  String get occupationRequired => Intl.message(
+    'Occupation is required',
+    name: 'occupationRequired',
+  );
+
+  String get medicineNameRequired => Intl.message(
+    'Medicine name is required',
+    name: 'medicineNameRequired',
+  );
+
+  String get bloodPressureNoteRequired => Intl.message(
+    'Blood pressure note is required',
+    name: 'bloodPressureNoteRequired',
+  );
+
+  String get bloodPressureNoteTooShort => Intl.message(
+    'Blood pressure note must be at least 10 characters',
+    name: 'bloodPressureNoteTooShort',
+  );
+
+  String get exerciseTypeRequired => Intl.message(
+    'Please select exercise type',
+    name: 'exerciseTypeRequired',
+  );
+
+  String get medicineCountRequired => Intl.message(
+    'Please select medicine count',
+    name: 'medicineCountRequired',
+  );
 
 
 }

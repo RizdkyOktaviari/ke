@@ -12,6 +12,119 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
+  String? _validateName(String? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) {
+      return localizations.nameRequired;
+    }
+    if (value.length < 3) {
+      return localizations.nameTooShort;
+    }
+    return null;
+  }
+
+  String? _validateUsername(String? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) {
+      return localizations.usernameRequired;
+    }
+    if (value.length < 4) {
+      return localizations.usernameTooShort;
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) {
+      return localizations.passwordRequired;
+    }
+    if (value.length < 8) {
+      return localizations.passwordTooShort;
+    }
+    return null;
+  }
+
+  String? _validatePasswordConfirm(String? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) {
+      return localizations.confirmPasswordRequired;
+    }
+    if (value != _passwordController.text) {
+      return localizations.passwordsDoNotMatch;
+    }
+    return null;
+  }
+
+  String? _validateBirthDate(String? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) {
+      return localizations.birthDateRequired;
+    }
+    // Validasi format tanggal YYYY-MM-DD
+    final dateRegex = RegExp(r'^\d{4}-\d{2}-\d{2}$');
+    if (!dateRegex.hasMatch(value)) {
+      return localizations.invalidDateFormat;
+    }
+    return null;
+  }
+
+  String? _validatePhone(String? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) {
+      return localizations.phoneRequired;
+    }
+    if (!RegExp(r'^\d{10,13}$').hasMatch(value)) {
+      return localizations.invalidPhoneFormat;
+    }
+    return null;
+  }
+
+  String? _validateDuration(String? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) {
+      return localizations.durationRequired;
+    }
+    if (int.tryParse(value) == null) {
+      return localizations.invalidNumberFormat;
+    }
+    return null;
+  }
+  String? _validateEducation(String? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) {
+      return localizations.educationRequired;
+    }
+    return null;
+  }
+
+  String? _validateOccupation(String? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) {
+      return localizations.occupationRequired;
+    }
+    return null;
+  }
+
+  String? _validateMedicineName(String? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) {
+      return localizations.medicineNameRequired;
+    }
+    return null;
+  }
+
+  String? _validateNote(String? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) {
+      return localizations.bloodPressureNoteRequired;
+    }
+    if (value.length < 4) {
+      return localizations.bloodPressureNoteTooShort;
+    }
+    return null;
+  }
   TimeOfDay _selectedTime = TimeOfDay.now();
   final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -59,66 +172,64 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+
   Future<void> _register() async {
-    if (!_validateInputs()) return;
-    final hour = _selectedTime.hour.toString().padLeft(2, '0');
-    final minute = _selectedTime.minute.toString().padLeft(2, '0');
-    final timeString = '$hour:$minute';
+    final localizations = AppLocalizations.of(context)!;
 
-    final data = RegisterData(
-      name: _nameController.text,
-      username: _usernameController.text,
-      password: _passwordController.text,
-      passwordConfirmation: _passwordConfirmController.text,
-      dateOfBirth: _birthController.text,
-      education: _educationController.text,
-      occupation: _occupationController.text,
-      durationOfHypertension: int.parse(_durationController.text),
-      phoneNumber: _phoneController.text,
-      gender: _selectedGender,
-      noteHypertension: _noteController.text,
-      exerciseId: exerciseIds[selectedExercise] ?? 1,
-      exerciseTimeSchedule: timeString,
-      medicineName: _medicineController.text,
-      medicineCount: _medicineCount,
-    );
-
-    final success = await context.read<AuthProvider>().register(data);
-
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.registrationSuccess)),
-      );
-      Navigator.pop(context);
-    }
-  }
-
-  bool _validateInputs() {
-    if (_nameController.text.isEmpty ||
-        _usernameController.text.isEmpty ||
-        _passwordController.text.isEmpty ||
-        _passwordConfirmController.text.isEmpty ||
-        _birthController.text.isEmpty ||
-        _educationController.text.isEmpty ||
-        _occupationController.text.isEmpty ||
-        _durationController.text.isEmpty ||
-        _phoneController.text.isEmpty ||
-        _noteController.text.isEmpty ||
-        _medicineController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.allFieldsRequired)),
-      );
-      return false;
+    if (!_formKey.currentState!.validate()) {
+      return;
     }
 
-    if (_passwordController.text != _passwordConfirmController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.passwordsDoNotMatch)),
-      );
-      return false;
-    }
+    try {
+      final hour = _selectedTime.hour.toString().padLeft(2, '0');
+      final minute = _selectedTime.minute.toString().padLeft(2, '0');
+      final timeString = '$hour:$minute';
 
-    return true;
+      final data = RegisterData(
+        name: _nameController.text,
+        username: _usernameController.text,
+        password: _passwordController.text,
+        passwordConfirmation: _passwordConfirmController.text,
+        dateOfBirth: _birthController.text,
+        education: _educationController.text,
+        occupation: _occupationController.text,
+        durationOfHypertension: int.parse(_durationController.text),
+        phoneNumber: _phoneController.text,
+        gender: _selectedGender,
+        noteHypertension: _noteController.text,
+        exerciseId: exerciseIds[selectedExercise] ?? 1,
+        exerciseTimeSchedule: timeString,
+        medicineName: _medicineController.text,
+        medicineCount: _medicineCount,
+      );
+
+      final success = await context.read<AuthProvider>().register(data);
+
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(localizations.registrationSuccess),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context);
+      } else {
+        final error = context.read<AuthProvider>().error;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error ?? localizations.registrationFailed),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(localizations.unexpectedError),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -204,275 +315,289 @@ class _RegisterPageState extends State<RegisterPage> {
             return Center(child: CircularProgressIndicator());
           }
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.createAccount,
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  l10n.signUpToGetStarted,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                SizedBox(height: 30),
-
-                TextField(
-                  controller: _nameController,
-                  decoration: _buildInputDecoration(l10n.name),
-                ),
-                SizedBox(height: 16),
-
-                TextField(
-                  controller: _usernameController,
-                  decoration: _buildInputDecoration(l10n.username),
-                ),
-                SizedBox(height: 16),
-
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: _buildInputDecoration(l10n.password),
-                ),
-                SizedBox(height: 16),
-
-                TextField(
-                  controller: _passwordConfirmController,
-                  obscureText: true,
-                  decoration: _buildInputDecoration(l10n.confirmPassword),
-                ),
-                SizedBox(height: 16),
-
-                TextField(
-                  controller: _birthController,
-                  decoration: _buildInputDecoration(l10n.dateOfBirth),
-                ),
-                SizedBox(height: 16),
-
-                TextField(
-                  controller: _educationController,
-                  decoration: _buildInputDecoration(l10n.education),
-                ),
-                SizedBox(height: 16),
-
-                TextField(
-                  controller: _occupationController,
-                  decoration: _buildInputDecoration(l10n.occupation),
-                ),
-                SizedBox(height: 16),
-
-                TextField(
-                  controller: _durationController,
-                  keyboardType: TextInputType.number,
-                  decoration: _buildInputDecoration(l10n.howLongHaveYouHadHypertension),
-                ),
-                SizedBox(height: 16),
-
-                TextField(
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
-                  decoration: _buildInputDecoration(l10n.phone),
-                ),
-                SizedBox(height: 24),
-
-                Text(
-                  l10n.notificationSettings,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[700],
-                  ),
-                ),
-
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        'Nama Aktifitas Fisik',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                      ),
+          return Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.createAccount,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
                     ),
-                    Expanded(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        value: selectedExercise,
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedExercise = newValue!;
-                          });
-                        },
-                        items: exerciseIds.keys.map((exercise) {
-                          return DropdownMenuItem(
-                            child: Text(exercise),
-                            value: exercise,
-                          );
-                        }).toList(),
-                      ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    l10n.signUpToGetStarted,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
                     ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        'Waktu Aktifitas Fisik',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                      ),
+                  ),
+                  SizedBox(height: 30),
+
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: _buildInputDecoration(l10n.name),
+                    validator: _validateName,
+                  ),
+                  SizedBox(height: 16),
+
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: _buildInputDecoration(l10n.username),
+                    validator: _validateUsername,
+                  ),
+                  SizedBox(height: 16),
+
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: _buildInputDecoration(l10n.password),
+                    validator: _validatePassword,
+                  ),
+                  SizedBox(height: 16),
+
+                  TextFormField(
+                    controller: _passwordConfirmController,
+                    obscureText: true,
+                    decoration: _buildInputDecoration(l10n.confirmPassword),
+                    validator: _validatePasswordConfirm,
+                  ),
+                  SizedBox(height: 16),
+
+                  TextFormField(
+                    controller: _birthController,
+                    decoration: _buildInputDecoration(l10n.dateOfBirth),
+                    validator: _validateBirthDate,
+                  ),
+                  SizedBox(height: 16),
+
+                  TextFormField(
+                    controller: _educationController,
+                    decoration: _buildInputDecoration(l10n.education),
+                    validator: _validateEducation,
+                  ),
+                  SizedBox(height: 16),
+
+                  TextFormField(
+                    controller: _occupationController,
+                    decoration: _buildInputDecoration(l10n.occupation),
+                    validator: _validateOccupation,
+                  ),
+                  SizedBox(height: 16),
+            
+                  TextFormField(
+                    controller: _durationController,
+                    keyboardType: TextInputType.number,
+                    validator: _validateDuration,
+                    decoration: _buildInputDecoration(l10n.howLongHaveYouHadHypertension),
+                  ),
+                  SizedBox(height: 16),
+            
+                  TextFormField(
+                    controller: _phoneController,
+                    validator: _validatePhone,
+                    keyboardType: TextInputType.phone,
+                    decoration: _buildInputDecoration(l10n.phone),
+                  ),
+                  SizedBox(height: 24),
+            
+                  Text(
+                    l10n.notificationSettings,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700],
                     ),
-                    Expanded(
-                      child: ListTile(
-                        title: Text('${_selectedTime.format(context)}'),
-                        trailing: Icon(Icons.access_time),
-                        onTap: () async {
-                          final TimeOfDay? timeOfDay = await showTimePicker(
-                            context: context,
-                            initialTime: _selectedTime,
-                          );
-                          if (timeOfDay != null) {
+                  ),
+            
+                  SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          'Nama Aktifitas Fisik',
+                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                      ),
+                      Expanded(
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          value: selectedExercise,
+                          onChanged: (newValue) {
                             setState(() {
-                              _selectedTime = timeOfDay;
+                              selectedExercise = newValue!;
                             });
-                          }
-                        },
+                          },
+                          items: exerciseIds.keys.map((exercise) {
+                            return DropdownMenuItem(
+                              child: Text(exercise),
+                              value: exercise,
+                            );
+                          }).toList(),
+                        ),
                       ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          'Waktu Aktifitas Fisik',
+                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                      ),
+                      Expanded(
+                        child: ListTile(
+                          title: Text('${_selectedTime.format(context)}'),
+                          trailing: Icon(Icons.access_time),
+                          onTap: () async {
+                            final TimeOfDay? timeOfDay = await showTimePicker(
+                              context: context,
+                              initialTime: _selectedTime,
+                            );
+                            if (timeOfDay != null) {
+                              setState(() {
+                                _selectedTime = timeOfDay;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          l10n.medicine,
+                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: TextFormField(
+                          validator: _validateMedicineName,
+                          controller: _medicineController,
+                          decoration: _buildInputDecoration('Nama Obat'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+            
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          l10n.timesPerDay,
+                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: DropdownButton<int>(
+                          value: _medicineCount,
+                          items: [0,1,2,3,4,5].map((count) {
+                            return DropdownMenuItem(
+                              value: count,
+                              child: Text('$count kali'),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _medicineCount = value ?? 0;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 24),
+            
+                  Text(
+                    l10n.gender,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700],
                     ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile<String>(
+                          title: Text(AppLocalizations.of(context)!.male),
+                          value: 'M',
+                          groupValue: _selectedGender,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedGender = value!;
+                            });
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: RadioListTile<String>(
+                          title: Text(AppLocalizations.of(context)!.female),
+                          value: 'F',
+                          groupValue: _selectedGender,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedGender = value!;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+            
+                  TextFormField(
+                    validator: _validateNote,
+                    controller: _noteController,
+                    maxLines: 3,
+                    decoration: _buildInputDecoration(l10n.bloodPressureNote),
+                  ),
+                  SizedBox(height: 30),
+            
+                  if (auth.error != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
                       child: Text(
-                        l10n.medicine,
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        auth.error!,
+                        style: TextStyle(color: Colors.red),
                       ),
                     ),
-                    Expanded(
-                      flex: 3,
-                      child: TextField(
-                        controller: _medicineController,
-                        decoration: _buildInputDecoration('Nama Obat'),
+            
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
+                      onPressed: _register,
                       child: Text(
-                        l10n.timesPerDay,
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        l10n.signUp,
+                        style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: DropdownButton<int>(
-                        value: _medicineCount,
-                        items: [0,1,2,3,4,5].map((count) {
-                          return DropdownMenuItem(
-                            value: count,
-                            child: Text('$count kali'),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _medicineCount = value ?? 0;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 24),
-
-                Text(
-                  l10n.gender,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[700],
-                  ),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: RadioListTile<String>(
-                        title: Text(AppLocalizations.of(context)!.male),
-                        value: 'M',
-                        groupValue: _selectedGender,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedGender = value!;
-                          });
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: RadioListTile<String>(
-                        title: Text(AppLocalizations.of(context)!.female),
-                        value: 'F',
-                        groupValue: _selectedGender,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedGender = value!;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-
-                TextField(
-                  controller: _noteController,
-                  maxLines: 3,
-                  decoration: _buildInputDecoration(l10n.bloodPressureNote),
-                ),
-                SizedBox(height: 30),
-
-                if (auth.error != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Text(
-                      auth.error!,
-                      style: TextStyle(color: Colors.red),
                     ),
                   ),
-
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    onPressed: _register,
-                    child: Text(
-                      l10n.signUp,
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
