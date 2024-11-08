@@ -180,7 +180,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'protein': MessageLookupByLibrary.simpleMessage('Protein'),
     'carbohydrate': MessageLookupByLibrary.simpleMessage('Karbohidrat'),
     'sugar': MessageLookupByLibrary.simpleMessage('Gula'),
-    'cholesterolInMg': MessageLookupByLibrary.simpleMessage('Kolesterol (mg)'),
+    'cholesterolInMg': MessageLookupByLibrary.simpleMessage('Kolesterol'),
     'weightInG': MessageLookupByLibrary.simpleMessage('Berat (g)'),
     'noFileChosen': MessageLookupByLibrary.simpleMessage('Tidak ada file dipilih'),
     'chooseFile': MessageLookupByLibrary.simpleMessage('Pilih File'),

@@ -5,13 +5,13 @@ class Recipe {
   final String? description;
   final String? foodType;
   final String? portion;
-  final int? calories;
-  final int? protein;
-  final int? fat;
-  final int? carbohydrate;
-  final int? sugar;
-  final int? cholesterol;
-  final int? mass;
+  final String? calories;
+  final String? protein;
+  final String? fat;
+  final String? carbohydrate;
+  final String? sugar;
+  final String? cholesterol;
+  final String? mass;
   final String? image;
   final String? imageUrl;
 
@@ -55,13 +55,13 @@ class Recipe {
       description: json['description'] as String?,
       foodType: json['food_type'] as String?,
       portion: json['portion'] as String?,
-      calories: json['calories'] as int?,
-      protein: json['protein'] as int?,
-      fat: json['fat'] as int?,
-      carbohydrate: json['carbohydrate'] as int?,
-      sugar: json['sugar'] as int?,
-      cholesterol: json['cholesterol'] as int?,
-      mass: json['mass'] as int?,
+      calories: json['calories'] as String?,
+      protein: json['protein'] as String?,
+      fat: json['fat'] as String?,
+      carbohydrate: json['carbohydrate'] as String?,
+      sugar: json['sugar'] as String?,
+      cholesterol: json['cholesterol'] as String?,
+      mass: json['mass'] as String?,
       image: json['image'] as String?,
       imageUrl: json['image_url'] as String?,
     );

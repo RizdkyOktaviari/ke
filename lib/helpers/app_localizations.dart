@@ -863,6 +863,8 @@ class AppLocalizations {
     name: 'medicineCountRequired',
   );
 
+  get required => null;
+
 
 }
 

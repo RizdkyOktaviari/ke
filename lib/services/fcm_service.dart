@@ -179,7 +179,7 @@ class NotificationService {
               channelDescription: 'Channel for schedule notifications',
               importance: Importance.high,
               priority: Priority.high,
-              icon: '@mipmap/ic_launcher',
+              icon: '@drawable/logo',
               // sound: RawResourceAndroidNotificationSound('notification_sound'),
             ),
             iOS: const DarwinNotificationDetails(

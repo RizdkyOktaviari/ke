@@ -35,8 +35,72 @@ class _ManagePageContentState extends State<_ManagePageContent> {
   final _formKey = GlobalKey<FormState>();
   String _selectedFoodType = 'breakfast';
   final List<String> _foodTypes = ['breakfast', 'lunch', 'dinner', 'snacks'];
+  void formatNumber(TextEditingController controller) {
+    if (controller.text.isNotEmpty) {
+      // Coba parse nilai sebagai double
+      double? value = double.tryParse(controller.text.replaceAll(',', '.'));
+      if (value != null) {
+        // Format angka dengan 1 digit desimal
+        String formatted = value.toStringAsFixed(1);
+        // Update controller hanya jika format berbeda
+        if (controller.text != formatted) {
+          controller.text = formatted;
+          // Pindahkan cursor ke akhir
+          controller.selection = TextSelection.fromPosition(
+            TextPosition(offset: formatted.length),
+          );
+        }
+      }
+    }
+  }
 
+  double? parseNumericInput(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+    // Replace comma with dot for proper parsing
+    value = value.replaceAll(',', '.');
+    // Try parsing as double
+    return double.tryParse(value);
+  }
+  String? validateNumericField(String? value, String fieldName, BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
 
+    if (value == null || value.isEmpty) {
+      // Menggunakan pesan spesifik untuk setiap field
+      switch (fieldName) {
+        case 'fat':
+          return localizations.fatRequired;
+        case 'protein':
+          return localizations.proteinRequired;
+        case 'carbs':
+          return localizations.carbRequired;
+        case 'sugar':
+          return localizations.sugarRequired;
+        case 'cholesterol':
+          return localizations.cholesterolRequired;
+        case 'weight':
+          return localizations.weightRequired;
+        default:
+          return '${fieldName} is required';
+      }
+    }
+
+    // Replace koma dengan titik untuk parsing yang benar
+    value = value.replaceAll(',', '.');
+
+    // Coba parse sebagai double
+    final number = double.tryParse(value);
+    if (number == null) {
+      return localizations.enterValidNumber;
+    }
+
+    if (number < 0) {
+      return localizations.enterNonNegativeNumber;
+    }
+
+    return null;
+  }
   Future<void> _saveRecipe() async {
     final localizations = AppLocalizations.of(context);
     try {
@@ -54,26 +118,26 @@ class _ManagePageContentState extends State<_ManagePageContent> {
       }
 
       // Parse numeric values with validation
-      int? calories = int.tryParse(_carbsController.text);
-      int? protein = int.tryParse(_proteinController.text);
-      int? fat = int.tryParse(_fatController.text);
-      int? carbs = int.tryParse(_carbsController.text);
-      int? sugar = int.tryParse(_sugarController.text);
-      int? cholesterol = int.tryParse(_cholesterolController.text);
-      int? mass = int.tryParse(_massController.text);
+      double? calories = parseNumericInput(_carbsController.text);
+      double? fat = parseNumericInput(_fatController.text);
+      double? protein = parseNumericInput(_proteinController.text);
+      double? carbs = parseNumericInput(_carbsController.text);
+      double? sugar = parseNumericInput(_sugarController.text);
+      double? cholesterol = parseNumericInput(_cholesterolController.text);
+      double? mass = parseNumericInput(_massController.text);
 
       final recipe = Recipe(
         foodName: _foodNameController.text,
         description: _descriptionController.text,
         foodType: _selectedFoodType,
         portion: _portionController.text,
-        calories: calories,
-        protein: protein,
-        fat: fat,
-        carbohydrate: carbs,
-        sugar: sugar,
-        cholesterol: cholesterol,
-        mass: mass,
+        calories: _carbsController.text,         // Gunakan text langsung
+        protein: _proteinController.text,        // Gunakan text langsung
+        fat: _fatController.text,                // Gunakan text langsung
+        carbohydrate: _carbsController.text,     // Gunakan text langsung
+        sugar: _sugarController.text,            // Gunakan text langsung
+        cholesterol: _cholesterolController.text, // Gunakan text langsung
+        mass: _massController.text,
       );
 
       final success = await Provider.of<RecipeProvider>(context, listen: false)
@@ -185,111 +249,108 @@ class _ManagePageContentState extends State<_ManagePageContent> {
                 Text(localizations.fat),
                 TextFormField(
                   controller: _fatController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: localizations.fat,
                     border: OutlineInputBorder(),
                     hintText: '0',
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return localizations.fatRequired;
+                    validator: (value) =>
+                    validateNumericField(value, 'fat', context),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      formatNumber(_fatController);
                     }
-                    if (int.tryParse(value) == null) {
-                      return localizations.enterValidNumber;
-                    }
-                    if (int.parse(value) < 0) {
-                      return localizations.enterNonNegativeNumber;
-                    }
-                    return null;
                   },
+
+
                 ),
                 SizedBox(height: 16),
                 Text(localizations.protein),
                 TextFormField(
                   controller: _proteinController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: localizations.protein,
                     border: OutlineInputBorder(),
                     hintText: '0',
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return localizations.proteinRequired;
+                  validator: (value) =>
+                    validateNumericField(value, 'protein', context),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      formatNumber(_proteinController);
                     }
-                    if (int.tryParse(value) == null) {
-                      return localizations.enterValidNumber;
-                    }
-                    if (int.parse(value) < 0) {
-                      return localizations.enterNonNegativeNumber;
-                    }
-                    return null;
                   },
                 ),
                 SizedBox(height: 16),
                 Text(localizations.carbohydrate),
                 TextFormField(
                   controller: _carbsController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: '0',
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return localizations.carbRequired;
+                  validator: (value) =>
+                    validateNumericField(value, 'carbs', context),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      formatNumber(_carbsController);
                     }
-                    return null;
                   },
+
                 ),
                 SizedBox(height: 16),
                 Text(localizations.sugar),
                 TextFormField(
                   controller: _sugarController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: '0'
                   ),
-                  validator:(value) {
-          if (value == null || value.isEmpty) {
-          return localizations.sugarRequired;
-          }
-          return null;
-          },
+                  validator:(value) =>
+                    validateNumericField(value, 'sugar', context),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      formatNumber(_sugarController);
+                    }
+                  },
                 ),
                 SizedBox(height: 16),
                 Text(localizations.cholesterolInMg),
                 TextFormField(
                   controller: _cholesterolController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: '0',
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return localizations.cholesterolRequired;
+                  validator: (value) =>
+                    validateNumericField(value, 'cholesterol', context),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      formatNumber(_cholesterolController);
                     }
-                    return null;
                   },
+
                 ),
                 SizedBox(height: 16),
                 Text(localizations.weightInG),
                 TextFormField(
                   controller: _massController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: '0',
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return localizations.weightRequired;
+                  validator: (value) =>
+                    validateNumericField(value, 'weight', context),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      formatNumber(_massController);
                     }
-                    return null;
                   },
+
                 ),
                 SizedBox(height: 20),
                 Row(

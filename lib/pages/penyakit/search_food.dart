@@ -72,9 +72,13 @@ class _SearchFoodPageState extends State<SearchFoodPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resep berhasil ditambahkan')),
       );
+      double calories = 0.0;
+      if (recipe.calories != null && recipe.calories!.isNotEmpty) {
+        calories = double.tryParse(recipe.calories!) ?? 0.0;
+      }
       widget.onFoodSelected(
         recipe.foodName ?? '',
-        recipe.calories?.toDouble() ?? 0.0,
+        calories,
       );
 
     } else {

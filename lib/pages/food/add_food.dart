@@ -47,11 +47,11 @@ class AddFoodPageState extends State<AddFoodPage> {
                 final String name = nameController.text;
                 final double calories = double.parse(caloriesController.text);
 
-                // Add the new food item to the list
+
                 var foodItems = [];
                 foodItems.add({'name': name, 'calories': calories});
 
-                // Go back to the previous page
+
                 Navigator.pop(context);
               },
               child: Text(
