@@ -66,24 +66,64 @@ class _SearchFoodPageState extends State<SearchFoodPage> {
     if (recipe.id == null) return;
 
     final recipeProvider = Provider.of<RecipeProvider>(context, listen: false);
-    final success = await recipeProvider.addFoodIntake(token, recipe.id!);
 
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Resep berhasil ditambahkan')),
-      );
-      double calories = 0.0;
-      if (recipe.calories != null && recipe.calories!.isNotEmpty) {
-        calories = double.tryParse(recipe.calories!) ?? 0.0;
+    // Tampilkan loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    try {
+      final success = await recipeProvider.addFoodIntake(token, recipe.id!);
+
+      // Tutup loading dialog
+      Navigator.of(context).pop();
+
+      if (success) {
+        double calories = 0.0;
+        if (recipe.calories != null && recipe.calories!.isNotEmpty) {
+          calories = double.tryParse(recipe.calories!) ?? 0.0;
+        }
+
+        // Panggil callback untuk menambahkan makanan
+        // widget.onFoodSelected(
+        //   recipe.foodName ?? '',
+        //   calories,
+        // );
+
+        // Tampilkan snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Resep berhasil ditambahkan'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+
+        // Refresh daftar resep
+        // Provider.of<RecipeProvider>(context, listen: false).fetchRecipes();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(recipeProvider.error),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
-      widget.onFoodSelected(
-        recipe.foodName ?? '',
-        calories,
-      );
+    } catch (e) {
+      // Tutup loading dialog jika terjadi error
+      Navigator.of(context).pop();
 
-    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(recipeProvider.error)),
+        SnackBar(
+          content: Text('Terjadi kesalahan: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
@@ -236,7 +276,7 @@ class _SearchFoodPageState extends State<SearchFoodPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.green,
         onPressed: () {
           Navigator.push(
             context,
@@ -247,10 +287,10 @@ class _SearchFoodPageState extends State<SearchFoodPage> {
           localizations.createRecipe,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 16,
+            fontSize: 14,
           ),
         ),
-        icon: Icon(Icons.add, color: Colors.white),
+
       ),
     );
   }

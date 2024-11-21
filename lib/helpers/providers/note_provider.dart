@@ -1,12 +1,19 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../../models/note_model.dart';
+import 'auth_provider.dart';
+import 'basic_provider.dart';
 
-class NoteProvider with ChangeNotifier {
+class NoteProvider extends BaseProvider {
   bool _isLoading = false;
   String? _error;
+
+  NoteProvider({required AuthProvider authProvider,
+    required BuildContext context,
+  }) : super(authProvider, context);
 
   bool get isLoading => _isLoading;
   String? get error => _error;
@@ -46,5 +53,11 @@ class NoteProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  @override
+  void reset() {
+    setLoading(false);
+    setError(null);
   }
 }

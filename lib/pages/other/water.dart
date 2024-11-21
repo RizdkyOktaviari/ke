@@ -49,12 +49,18 @@ class _WaterPageState extends State<WaterPage> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations!.waterIntake),
         backgroundColor: Colors.blueAccent,
       ),
-      body: Consumer<WaterProvider>(
+      body:  !authProvider.isAuthenticated
+          ? FutureBuilder(
+        future: authProvider.handleUnauthorized(context),
+        builder: (context, snapshot) => const SizedBox(),
+      )
+          :Consumer<WaterProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
             return Center(child: CircularProgressIndicator());

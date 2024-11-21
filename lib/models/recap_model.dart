@@ -1,10 +1,13 @@
+import 'note_model.dart';
+
 class RecapModel {
   final String date;
   final FoodLogs foodLogs;
-  final String drinkLogs;
+  final DrinkLogs drinkLogs;  // Ubah ke DrinkLogs class
   final List<ExerciseLog> exerciseLogs;
   final List<BloodPressure> bloodPressure;
   final List<MedicineLog> medicineLogs;
+  final List<Note> noteLogs;
 
   RecapModel({
     required this.date,
@@ -13,13 +16,15 @@ class RecapModel {
     required this.exerciseLogs,
     required this.bloodPressure,
     required this.medicineLogs,
+    required this.noteLogs,
   });
 
   factory RecapModel.fromJson(String date, Map<String, dynamic> json) {
+    print('Parsing RecapModel - Food Logs: ${json['food_logs']}');
     return RecapModel(
       date: date,
       foodLogs: FoodLogs.fromJson(json['food_logs']),
-      drinkLogs: json['drinklogs'],
+      drinkLogs: DrinkLogs.fromJson(json['drinklogs']),  // Parse ke DrinkLogs
       exerciseLogs: (json['exercise_logs'] as List)
           .map((e) => ExerciseLog.fromJson(e))
           .toList(),
@@ -29,6 +34,44 @@ class RecapModel {
       medicineLogs: (json['medicine_logs'] as List)
           .map((e) => MedicineLog.fromJson(e))
           .toList(),
+      noteLogs: (json['notes'] as List?)
+          ?.map((e) => Note.fromJson(Map<String, dynamic>.from(e)))
+          .toList() ?? [],
+    );
+  }
+}
+
+class DrinkLogs {
+  final String totalAmount;
+  final List<Drink> drinks;
+
+  DrinkLogs({
+    required this.totalAmount,
+    required this.drinks,
+  });
+
+  factory DrinkLogs.fromJson(Map<String, dynamic> json) {
+    return DrinkLogs(
+      totalAmount: json['total_amount'],
+      drinks: (json['drinks'] as List)
+          .map((e) => Drink.fromJson(e))
+          .toList(),
+    );
+  }
+}
+class Drink {
+  final String drinkName;
+  final int amounts;
+
+  Drink({
+    required this.drinkName,
+    required this.amounts,
+  });
+
+  factory Drink.fromJson(Map<String, dynamic> json) {
+    return Drink(
+      drinkName: json['drink_name'],
+      amounts: json['amounts'],
     );
   }
 }
@@ -61,6 +104,7 @@ class Food {
   }
 }
 
+
 class ExerciseLog {
   final String exerciseName;
   final String duration;
@@ -81,19 +125,24 @@ class ExerciseLog {
   }
 }
 
+
 class BloodPressure {
   final int systolic;
   final int diastolic;
-  final String createdAt; // Ubah ke String
+  final String summary;    // Tambahkan field summary
+  final String createdAt;
 
   BloodPressure({
     required this.systolic,
     required this.diastolic,
+    required this.summary,
     required this.createdAt,
   });
+
   factory BloodPressure.fromJson(Map<String, dynamic> json) => BloodPressure(
     systolic: json['systolic'],
     diastolic: json['diastolic'],
+    summary: json['summary'],    // Parse summary
     createdAt: json['created_at'],
   );
 }
@@ -113,10 +162,14 @@ class MedicineLog {
 
   factory MedicineLog.fromJson(Map<String, dynamic> json) {
     return MedicineLog(
-      medicineName: json['medicine_name'],
-      dosage: json['dosage'],
-      summary: json['summary'],
-      createdAt: json['created_at'],
+      medicineName: _parseString(json['medicine_name']),
+      dosage: _parseString(json['dosage']),
+      summary: _parseString(json['summary']),
+      createdAt: _parseString(json['created_at']),
     );
+  }
+  static String _parseString(dynamic value) {
+    if (value == null) return '';
+    return value.toString();
   }
 }

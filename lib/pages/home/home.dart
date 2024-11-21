@@ -14,7 +14,10 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:provider/provider.dart';
 
 import '../../helpers/app_localizations.dart';
+import '../../helpers/providers/auth_provider.dart';
 import '../../helpers/providers/food_log_provider.dart';
+import '../../services/fcm_service.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,30 +31,31 @@ class HomePageState extends State<HomePage> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
-  final Map<String, double> foodEntries = {
-    'Breakfast': 0,
-    'Lunch': 0,
-    'Dinner': 0,
-    'Snacks': 0,
-  };
+  @override
+  void initState() {
+    super.initState();
+    // Fetch initial data
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<FoodLogProvider>(context, listen: false)
+          .setSelectedDate(_selectedDay); // Gunakan setSelectedDate
+    });
+  }
 
-  final GlobalKey<FoodLogPageState> _foodLogKey =
-      GlobalKey<FoodLogPageState>(); // Create a GlobalKey to access FoodLogPage
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title:
-            // make center title
-            Text(
-              localizations.log,
+        title: Text(
+          localizations.log,
           style: AppTextStyles.headline6,
         ),
         backgroundColor: Colors.blueAccent,
         actions: [
+          // Language selector remains the same
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Consumer<LocaleProvider>(
@@ -59,9 +63,7 @@ class HomePageState extends State<HomePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextButton(
-                    onPressed: () {
-                      provider.setLocaleByCode('id');
-                    },
+                    onPressed: () => provider.setLocaleByCode('id'),
                     style: TextButton.styleFrom(
                       foregroundColor: provider.locale.languageCode == 'id'
                           ? Colors.white
@@ -69,11 +71,9 @@ class HomePageState extends State<HomePage> {
                     ),
                     child: const Text('ID'),
                   ),
-                  Text('|', style: TextStyle(color: Colors.white)),
+                  const Text('|', style: TextStyle(color: Colors.white)),
                   TextButton(
-                    onPressed: () {
-                      provider.setLocaleByCode('en');
-                    },
+                    onPressed: () => provider.setLocaleByCode('en'),
                     style: TextButton.styleFrom(
                       foregroundColor: provider.locale.languageCode == 'en'
                           ? Colors.white
@@ -87,278 +87,240 @@ class HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  DrawerHeader(
-                    decoration: const BoxDecoration(
-                      color: Colors.blueAccent,
-                    ),
-                    child: Text(
-                      localizations.menu,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                      ),
-                    ),
-                  ),
-                  // ExpansionTile(
-                  //   leading: Icon(Icons.local_hospital),
-                  //   title: Text('Penyakit'),
-                  //   children: <Widget>[
-                  //     ListTile(
-                  //       title: Text('Informasi Penyakit'),
-                  //       onTap: () {
-                  //         Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //             builder: (context) => PenyakitListPage(),
-                  //           ),
-                  //         );
-                  //       },
-                  //     ),
-                  //     ListTile(
-                  //       title: Text('Manajemen Diri'),
-                  //       onTap: () {
-                  //         Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //             builder: (context) => PenyakitListPage(),
-                  //           ),
-                  //         );
-                  //       },
-                  //     ),
-                  //   ],
-                  // ),
-                  ExpansionTile(
-                    leading: Icon(Icons.book_online_sharp),
-                    title: Text(localizations.knowledge),
-                    children: <Widget>[
-                      ListTile(
-                        title: Text(localizations.knowledge),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PenyakitListPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      // ListTile(
-                      //   title: Text('Hipertensi'),
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => PenyakitListPage(),
-                      //       ),
-                      //     );
-                      //   },
-                      // ),
-                      // ListTile(
-                      //   title: Text('Manajemen Diri'),
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => PenyakitListPage(),
-                      //       ),
-                      //     );
-                      //   },
-                      // ),
-                      // ListTile(
-                      //   title: Text('Dash'),
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => PenyakitListPage(),
-                      //       ),
-                      //     );
-                      //   },
-                      // ),
-                    ],
-                  ),
-
-                  ListTile(
-                    leading: Icon(Icons.rice_bowl_sharp),
-                    title: Text(localizations.recipe),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RecipePage(),
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.restaurant_sharp),
-                    title: Text(localizations.manage),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ManagePage(),
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.list_alt_sharp),
-                    title: Text(localizations.summary),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RecapListPage(),
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.medication_liquid_sharp),
-                    title: Text(localizations.medicine),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ObatPage(),
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.chat_bubble_sharp),
-                    title: Text(localizations.chat),
-                    onTap: () {
-                      // Navigasi ke ReminderPage
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ChatPage(),
-                        ),
-                      );
-                    },
-                  ),
-                  //
-                  // listtile to setting reminder
-                  ListTile(
-                    leading: Icon(Icons.notifications),
-                    title: Text(localizations.reminder),
-                    onTap: () {
-                      // Navigasi ke ReminderPage
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ReminderNewPage(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.exit_to_app, color: Colors.blueAccent),
-              title: Text(localizations.exit),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(localizations.exitConfirmTitle),
-                    content: Text(
-                        localizations.exitConfirmMessage),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(false),
-                        child: Text(localizations.cancel),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(true); // Menutup dialog
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()),
-                            (Route<dynamic> route) =>
-                                false, // Menghapus semua rute sebelumnya
-                          );
-                        },
-                        child: Text(localizations.exit),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: _buildDrawer(localizations),
       body: Column(
         children: [
-          // Calendar widget
-          TableCalendar(
-            firstDay: DateTime.utc(2020, 10, 16),
-            lastDay: DateTime.utc(2030, 3, 14),
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay; // update focusedDay
-
-                // Call reset method on FoodLogPage when the day changes
-                _foodLogKey.currentState?.reset();
-              });
-              Provider.of<FoodLogProvider>(context, listen: false)
-                  .setSelectedDate(selectedDay);
-            },
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-            headerStyle: HeaderStyle(
-              formatButtonVisible: false,
-              titleCentered: true,
-              titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
-              leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
-              rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white),
-              decoration: BoxDecoration(color: Colors.blueAccent),
-            ),
-            calendarStyle: CalendarStyle(
-              todayDecoration: BoxDecoration(
-                color: Colors.blueAccent.withOpacity(0.3),
-                shape: BoxShape.circle,
+          // Calendar section
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.blueAccent,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
               ),
-              selectedDecoration: BoxDecoration(
-                color: Colors.blueAccent,
-                shape: BoxShape.circle,
+            ),
+            child: TableCalendar(
+              firstDay: DateTime.utc(2020, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: _focusedDay,
+              calendarFormat: _calendarFormat,
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                });
+                // Fetch data for selected date
+                Provider.of<FoodLogProvider>(context, listen: false)
+                    .setSelectedDate(selectedDay);
+              },
+              onFormatChanged: (format) {
+                if (_calendarFormat != format) {
+                  setState(() => _calendarFormat = format);
+                }
+              },
+              onPageChanged: (focusedDay) {
+                _focusedDay = focusedDay;
+              },
+              headerStyle: const HeaderStyle(
+                formatButtonVisible: false,
+                titleCentered: true,
+                titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
+                leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
+                rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white),
+                decoration: BoxDecoration(color: Colors.transparent),
+              ),
+              calendarStyle: CalendarStyle(
+                todayDecoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.3),
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                selectedTextStyle: const TextStyle(color: Colors.blueAccent),
+                todayTextStyle: const TextStyle(color: Colors.white),
+                defaultTextStyle: const TextStyle(color: Colors.white),
+                weekendTextStyle: const TextStyle(color: Colors.white70),
               ),
             ),
           ),
+          // FoodLogPage
           Expanded(
-            child: FoodLogPage(
-                key: _foodLogKey,
-                foodEntries: foodEntries), // Add key to access state
+            child: Consumer<FoodLogProvider>(
+              builder: (context, provider, child) {
+                if (provider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                return const FoodLogPage();
+              },
+            ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildDrawer(AppLocalizations l10n) {
+    return Drawer(
+      child: Column(
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(color: Colors.blueAccent),
+            child: Center(
+              child: Column(
+                children: [
+                  // Text(
+                  //   "Ht.Co",
+                  //   style: const TextStyle(
+                  //     color: Colors.white,
+                  //     fontSize: 24,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+                  // Text(
+                  //   "(Hypertension Control)",
+                  //   style: const TextStyle(
+                  //     color: Colors.white,
+                  //     fontSize: 24,
+                  //     fontStyle: FontStyle.italic,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+                  Text(
+                    "Joki Lebah",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              children: [
+                _buildDrawerItem(
+                  icon: Icons.book_online_sharp,
+                  title: l10n.knowledge,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => PenyakitListPage()),
+                  ),
+                ),
+                _buildDrawerItem(
+                  icon: Icons.rice_bowl_sharp,
+                  title: l10n.recipe,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => RecipePage()),
+                  ),
+                ),
+                _buildDrawerItem(
+                  icon: Icons.restaurant_sharp,
+                  title: l10n.manage,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ManagePage()),
+                  ),
+                ),
+                _buildDrawerItem(
+                  icon: Icons.list_alt_sharp,
+                  title: l10n.summary,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) =>  RecapListPage()),
+                  ),
+                ),
+                _buildDrawerItem(
+                  icon: Icons.medication_liquid_sharp,
+                  title: l10n.medicine,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => ObatPage()),
+                  ),
+                ),
+                _buildDrawerItem(
+                  icon: Icons.chat_bubble_sharp,
+                  title: l10n.chat,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ChatPage()),
+                  ),
+                ),
+                _buildDrawerItem(
+                  icon: Icons.notifications,
+                  title: l10n.reminder,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) =>  ReminderNewPage()),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _buildDrawerItem(
+            icon: Icons.exit_to_app,
+            title: l10n.exit,
+            textColor: Colors.blueAccent,
+            iconColor: Colors.blueAccent,
+            onTap: () => _showExitDialog(l10n),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    Color? textColor,
+    Color? iconColor,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: iconColor),
+      title: Text(title, style: TextStyle(color: textColor)),
+      onTap: onTap,
+    );
+  }
+
+  Future<void> _showExitDialog(AppLocalizations l10n) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.exitConfirmTitle),
+        content: Text(l10n.exitConfirmMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(l10n.exit),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      // ignore: use_build_context_synchronously
+      final notificationService = NotificationService();
+      await notificationService.clearFCMToken();
+
+      // Clear auth token and user data
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.logout();
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) =>  LoginPage()),
+            (route) => false,
+      );
+    }
   }
 }

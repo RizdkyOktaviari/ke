@@ -116,14 +116,29 @@
 //   print('Handling background message: ${message.messageId}');
 // }
 
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
+import 'package:http/http.dart' as http;
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _notifications =
   FlutterLocalNotificationsPlugin();
+  static const String baseUrl = 'http://108.137.67.23/api';
+  String? _authToken;
+
+  // Add method to set auth token
+  void setAuthToken(String token) {
+    _authToken = token;
+    // Re-update FCM token when auth token is set
+    _firebaseMessaging.getToken().then((fcmToken) {
+      if (fcmToken != null) {
+        _updateFCMToken(fcmToken);
+      }
+    });
+  }
 
   Future<void> initialize() async {
     var settings = await _firebaseMessaging.requestPermission(
@@ -132,6 +147,18 @@ class NotificationService {
       sound: true,
     );
     print('User notification permission status: ${settings.authorizationStatus}');
+    // Get FCM token
+    String? token = await _firebaseMessaging.getToken();
+    if (token != null) {
+      print('FCM Token Update: $token');
+      await _updateFCMToken(token);
+    }
+
+    // Listen to token refresh
+    _firebaseMessaging.onTokenRefresh.listen((String token) {
+      print('FCM Token refreshed: $token');
+      _updateFCMToken(token);
+    });
 
     // Configure notification channel
     await _notifications
@@ -157,6 +184,8 @@ class NotificationService {
         _handleNotificationTap(response.payload);
       },
     );
+
+
 
     // Listen to messages when app is in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -201,6 +230,67 @@ class NotificationService {
       _handleNotificationTap(message.data.toString());
     });
   }
+  Future<void> clearFCMToken() async {
+    try {
+      if (_authToken == null) return;
+
+      print('Clearing FCM token');
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/update-fcm-token'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_authToken',
+        },
+        body: jsonEncode({
+          'fcm_token': '',
+        }),
+      );
+
+      print('Clear FCM Response Status: ${response.statusCode}');
+      print('Clear FCM Response Body: ${response.body}');
+
+      _authToken = null;
+    } catch (e) {
+      print('Error clearing FCM token: $e');
+    }
+  }
+  Future<void> _updateFCMToken(String token) async {
+    if (_authToken == null) {
+    print('Cannot update FCM token: No auth token available');
+    return;
+  }
+
+    try {
+      print('Updating FCM token: $token');
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/update-fcm-token'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'fcm_token': token,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          print('FCM token updated successfully');
+        } else {
+          print('Failed to update FCM token: ${data['message']}');
+        }
+      } else {
+        print('Failed to update FCM token: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error updating FCM token: $e');
+    }
+  }
+
 
   // Handle schedule message
   void _handleScheduleMessage(RemoteMessage message) {

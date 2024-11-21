@@ -6,8 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import '../../models/resep_model.dart';
+import 'auth_provider.dart';
+import 'basic_provider.dart';
 
-class RecipeProvider with ChangeNotifier {
+class RecipeProvider extends BaseProvider {
   List<Recipe> _recipes = [];
   bool _isLoading = false;
   bool _isSubmitting = false;
@@ -19,6 +21,10 @@ class RecipeProvider with ChangeNotifier {
   String get error => _error;
   String _fileName = '';
   File? _image;
+
+  RecipeProvider({required AuthProvider authProvider,
+    required BuildContext context,
+  }) : super(authProvider, context);
   String get fileName => _fileName;
   File? get image => _image;
 
@@ -74,6 +80,9 @@ class RecipeProvider with ChangeNotifier {
         }),
       );
 
+      if (!await handleApiResponse(response)) {
+        return false;
+      }
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
         if (data['status'] == true) {
@@ -156,5 +165,11 @@ class RecipeProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  @override
+  void reset() {
+    setLoading(false);
+    setError(null);
   }
 }

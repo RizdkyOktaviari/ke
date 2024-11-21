@@ -56,14 +56,19 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(localizations!.bloodPressureTitle),
         backgroundColor: Colors.blueAccent,
       ),
-      body: Consumer<BloodPressureProvider>(
+      body:  !authProvider.isAuthenticated
+          ? FutureBuilder(
+        future: authProvider.handleUnauthorized(context),
+        builder: (context, snapshot) => const SizedBox(),
+      )
+          :Consumer<BloodPressureProvider>(
           builder: (context, provider, child) {
             if (provider.isLoading) {
               return Center(child: CircularProgressIndicator());

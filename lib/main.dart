@@ -41,13 +41,27 @@ void main() async {
     ChangeNotifierProvider(create: (_) => LocaleProvider()),
     ChangeNotifierProvider(create: (_) => AuthProvider()),
     ChangeNotifierProvider(create: (_) => MessageProvider()),
-    ChangeNotifierProvider(create: (_) => RecipeProvider()),
+    ChangeNotifierProxyProvider<AuthProvider, RecipeProvider>(
+      create: (context) => RecipeProvider(
+        authProvider: context.read<AuthProvider>(),
+        context: context,
+      ),
+      update: (context, auth, previous) => previous ?? RecipeProvider(
+        authProvider: auth,
+        context: context,
+      ),
+    ),
     ChangeNotifierProxyProvider<AuthProvider, FoodLogProvider>(
       create: (context) => FoodLogProvider(
         authProvider: context.read<AuthProvider>(),
+        context: context,
       ),
-      update: (context, auth, previous) => previous!,
+      update: (context, auth, previous) => previous ?? FoodLogProvider(
+        authProvider: auth,
+        context: context,
+      ),
     ),
+
     ChangeNotifierProxyProvider<AuthProvider, RecapProvider>(
       create: (context) => RecapProvider(context.read<AuthProvider>()),
       update: (context, auth, previous) => RecapProvider(auth),
@@ -60,10 +74,46 @@ void main() async {
       create: (contex) => alarmprovider(),
     ),
     ChangeNotifierProvider(create: (_) => ReminderProvider()),
-    ChangeNotifierProvider(create: (_) => ExerciseProvider()),
-    ChangeNotifierProvider(create: (_) => WaterProvider()),
-    ChangeNotifierProvider(create: (_) => BloodPressureProvider()),
-    ChangeNotifierProvider(create: (_) => NoteProvider()),
+    ChangeNotifierProxyProvider<AuthProvider, ExerciseProvider>(
+      create: (context) => ExerciseProvider(
+        authProvider: context.read<AuthProvider>(),
+        context: context,
+      ),
+      update: (context, auth, previous) => previous ?? ExerciseProvider(
+        authProvider: auth,
+        context: context,
+      )..fetchExercisesForRegister(),
+    ),
+    ChangeNotifierProxyProvider<AuthProvider, WaterProvider>(
+      create: (context) => WaterProvider(
+        authProvider: context.read<AuthProvider>(),
+        context: context,
+      ),
+      update: (context, auth, previous) => previous ?? WaterProvider(
+        authProvider: auth,
+        context: context,
+      ),
+    ),
+    ChangeNotifierProxyProvider<AuthProvider, BloodPressureProvider>(
+      create: (context) => BloodPressureProvider(
+        authProvider: context.read<AuthProvider>(),
+        context: context,
+      ),
+      update: (context, auth, previous) => previous ?? BloodPressureProvider(
+        authProvider: auth,
+        context: context,
+      ),
+    ),
+    ChangeNotifierProxyProvider<AuthProvider, NoteProvider>(
+      create: (context) => NoteProvider(
+        authProvider: context.read<AuthProvider>(),
+        context: context,
+      ),
+      update: (context, auth, previous) => previous ?? NoteProvider(
+        authProvider: auth,
+        context: context,
+      ),
+    ),
     ChangeNotifierProvider(create: (_) => KnowledgeProvider()),
   ], child: const MyApp()));
 }

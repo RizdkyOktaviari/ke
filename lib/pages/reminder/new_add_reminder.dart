@@ -21,6 +21,21 @@ class _AddReminderPageState extends State<AddReminderPage> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   DateTime _selectedDate = DateTime.now(); // Ganti selectedDays dengan selectedDate
   final TextEditingController _messageController = TextEditingController();
+  DateTime? _accountCreatedAt;
+  @override
+  void initState() {
+    super.initState();
+    // Ambil tanggal pembuatan akun dari provider atau API
+    _fetchAccountCreationDate();
+  }
+  Future<void> _fetchAccountCreationDate() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    // Ambil tanggal pembuatan akun dari objek user
+    if (authProvider.user != null) {
+      _accountCreatedAt = DateTime.parse(authProvider.user!.createdAt);
+    }
+  }
+
 
   Future<void> _saveReminder() async {
     final localizations = AppLocalizations.of(context);
@@ -55,6 +70,18 @@ class _AddReminderPageState extends State<AddReminderPage> {
         reminderTime: timeString,
         type: widget.type,
       );
+
+      // Hitung selisih hari antara tanggal saat ini dan tanggal yang dipilih
+      final now = DateTime.now();
+      final difference = _selectedDate.difference(now).inDays;
+
+      // Jika selisih hari kurang dari 21 hari, tombol disable
+      if (difference < 21) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(localizations!.reminderDelay)),
+        );
+        return;
+      }
 
       final success = await Provider.of<ReminderProvider>(context, listen: false)
           .addReminder(token, reminder);
@@ -154,16 +181,26 @@ class _AddReminderPageState extends State<AddReminderPage> {
                   maxLines: 3,
                 ),
                 SizedBox(height:40),
+
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _saveReminder,
+                    onPressed: _accountCreatedAt != null
+                        ? (DateTime.now().difference(_accountCreatedAt!).inDays >= 21
+                        ? _saveReminder
+                        : null)
+                        : null,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(localizations.saveReminder),
                     ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _accountCreatedAt != null && DateTime.now().difference(_accountCreatedAt!).inDays >= 21
+                          ? Colors.blue
+                          : Colors.grey, // Ubah warna tombol
+                    ),
                   ),
-                ),
+                )
               ],
             ),
           );

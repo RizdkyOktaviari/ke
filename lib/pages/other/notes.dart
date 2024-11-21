@@ -54,14 +54,20 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   @override
-  Widget build(BuildContext context) {final localizations = AppLocalizations.of(context);
-
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations!.notes),
         backgroundColor: Colors.blueAccent,
       ),
-      body: Consumer<NoteProvider>(
+      body: !authProvider.isAuthenticated
+          ? FutureBuilder(
+        future: authProvider.handleUnauthorized(context),
+        builder: (context, snapshot) => const SizedBox(),
+      )
+          :Consumer<NoteProvider>(
           builder: (context, provider, child) {
             if (provider.isLoading) {
               return Center(child: CircularProgressIndicator());

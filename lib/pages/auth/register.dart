@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 
 import '../../helpers/app_localizations.dart';
 import '../../helpers/providers/auth_provider.dart';
+import '../../helpers/providers/exercise_provider.dart';
 import '../../helpers/providers/local_provider.dart';
+import '../../models/exercise_model.dart';
 import '../../models/register_model.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -137,7 +139,15 @@ class _RegisterPageState extends State<RegisterPage> {
   final _phoneController = TextEditingController();
   final _noteController = TextEditingController();
   final _medicineController = TextEditingController();
-  String selectedExercise = 'Rowing Machine (Intense)';
+  ExerciseModel? selectedExercise;
+
+  @override
+  void initState() {
+    super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   Provider.of<ExerciseProvider>(context, listen: false).fetchExercises();
+    // });
+  }
 
   final Map<String, int> exerciseIds = {
     'Rowing Machine (Intense)': 1,
@@ -172,6 +182,14 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  String? _validateExercise(ExerciseModel? value) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null) {
+      return localizations.exerciseTypeRequired;
+    }
+    return null;
+  }
+
 
   Future<void> _register() async {
     final localizations = AppLocalizations.of(context)!;
@@ -197,7 +215,7 @@ class _RegisterPageState extends State<RegisterPage> {
         phoneNumber: _phoneController.text,
         gender: _selectedGender,
         noteHypertension: _noteController.text,
-        exerciseId: exerciseIds[selectedExercise] ?? 1,
+        exerciseId: selectedExercise!.id,
         exerciseTimeSchedule: timeString,
         medicineName: _medicineController.text,
         medicineCount: _medicineCount,
@@ -415,35 +433,51 @@ class _RegisterPageState extends State<RegisterPage> {
                       color: Colors.grey[700],
                     ),
                   ),
-            
-                  SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          'Nama Aktifitas Fisik',
-                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                        ),
-                      ),
-                      Expanded(
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          value: selectedExercise,
-                          onChanged: (newValue) {
-                            setState(() {
-                              selectedExercise = newValue!;
-                            });
-                          },
-                          items: exerciseIds.keys.map((exercise) {
-                            return DropdownMenuItem(
-                              child: Text(exercise),
-                              value: exercise,
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ],
+
+                  Consumer<ExerciseProvider>(
+                    builder: (context, provider, child) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              l10n.physicalActivity,
+                              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                            ),
+                          ),
+                          Expanded(
+                            child: provider.isLoading
+                                ? const Center(child: CircularProgressIndicator())
+                                : DropdownButtonFormField<ExerciseModel>(
+                              value: selectedExercise,
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 5,
+                                ),
+                              ),
+                              validator: _validateExercise,
+                              items: provider.exercises.map((exercise) {
+                                return DropdownMenuItem<ExerciseModel>(
+                                  value: exercise,
+                                  child: Text(
+                                    exercise.exerciseName,
+                                    style: const TextStyle(fontSize: 14),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (ExerciseModel? newValue) {
+                                setState(() {
+                                  selectedExercise = newValue;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                   Row(
                     children: [

@@ -20,7 +20,17 @@ class _ExercisePageState extends State<ExercisePage> {
   double duration = 60;
   double caloriesBurned = 0;
   double distance = 0;
-  String selectedExercise = 'Rowing Machine (Intense)';
+  ExerciseModel? selectedExercise;
+
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ExerciseProvider>(context, listen: false).fetchExercises();
+    });
+  }
+
 
   final Map<String, int> exerciseIds = {
     'Rowing Machine (Intense)': 1,
@@ -59,11 +69,18 @@ class _ExercisePageState extends State<ExercisePage> {
   }
 
   Future<void> _submitExercise() async {
+    if (selectedExercise == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select an exercise')),
+      );
+      return;
+    }
+
     _calculateCalories();
 
     final exercise = Exercise(
-      mExerciseId: exerciseIds[selectedExercise] ?? 1,
-      description: selectedExercise,
+      mExerciseId: selectedExercise!.id,
+      description: selectedExercise!.description,
       duration: duration.toInt(),
       calories: caloriesBurned.toInt(),
       distance: distance.toInt(),
@@ -90,16 +107,22 @@ class _ExercisePageState extends State<ExercisePage> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations!.exercise),
         backgroundColor: Colors.blueAccent,
       ),
-      body: Consumer<ExerciseProvider>(
+      body: !authProvider.isAuthenticated
+          ? FutureBuilder(
+        future: authProvider.handleUnauthorized(context),
+        builder: (context, snapshot) => const SizedBox(),
+      )
+          :Consumer<ExerciseProvider>(
           builder: (context, provider, child) {
             if (provider.isLoading) {
               return Center(child: CircularProgressIndicator());
@@ -152,20 +175,22 @@ class _ExercisePageState extends State<ExercisePage> {
                   ),
                   SizedBox(height: 20),
                   Text(localizations.exerciseType),
-                  DropdownButton<String>(
-                    isExpanded: true,
+                  DropdownButtonFormField<ExerciseModel>(
                     value: selectedExercise,
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedExercise = newValue!;
-                      });
-                    },
-                    items: exerciseIds.keys.map((exercise) {
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder()
+                    ),
+                    items: provider.exercises.map((exercise) {
                       return DropdownMenuItem(
-                        child: Text(_getLocalizedExerciseName(localizations, exercise)),
                         value: exercise,
+                        child: Text(exercise.exerciseName),
                       );
                     }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedExercise = newValue;
+                      });
+                    },
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(

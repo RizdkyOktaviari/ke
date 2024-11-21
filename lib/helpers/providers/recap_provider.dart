@@ -5,6 +5,7 @@ import '../../models/recap_model.dart';
 import 'auth_provider.dart';
 
 class RecapProvider with ChangeNotifier {
+  static const String baseUrl = 'http://108.137.67.23/api';
   final AuthProvider authProvider;
   List<RecapModel> _recaps = [];
   bool _isLoading = false;
@@ -23,13 +24,12 @@ class RecapProvider with ChangeNotifier {
       return;
     }
 
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
     try {
+      _isLoading = true;
+      notifyListeners();
+
       final response = await http.get(
-        Uri.parse('http://108.137.67.23/api/all-daily-summary'),
+        Uri.parse('$baseUrl/all-daily-summary'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ${authProvider.token}',
@@ -37,14 +37,19 @@ class RecapProvider with ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
+        final responseData = json.decode(response.body);
         if (responseData['status'] == true) {
           final Map<String, dynamic> data = responseData['data'];
-          _recaps = data.entries
-              .map((entry) => RecapModel.fromJson(entry.key, entry.value))
-              .toList();
+
+          _recaps = data.entries.map((entry) {
+            return RecapModel.fromJson(entry.key, entry.value);
+          }).toList();
+
+          _recaps.sort((a, b) => b.date.compareTo(a.date));
+          _error = null;
         } else {
-          _error = responseData['message']?.toString() ?? 'Unknown error occurred';
+          _error = responseData['message'] ?? 'Unknown error occurred';
+          _recaps = [];
         }
       } else if (response.statusCode == 401) {
         _error = 'Session expired. Please login again.';
@@ -54,9 +59,10 @@ class RecapProvider with ChangeNotifier {
       }
     } catch (e) {
       _error = 'Error: ${e.toString()}';
+      _recaps = [];
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 }

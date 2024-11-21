@@ -18,11 +18,7 @@ class AuthenticationWrapper extends StatelessWidget {
           );
         }
 
-        if (authProvider.isAuthenticated) {
-          return const HomePage();
-        }
-
-        return LoginPage();
+        return authProvider.isAuthenticated ? const HomePage() : LoginPage();
       },
     );
   }

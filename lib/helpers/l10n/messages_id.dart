@@ -70,7 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'medicine' : MessageLookupByLibrary.simpleMessage('Obat'),
     'notes' : MessageLookupByLibrary.simpleMessage('Catatan'),
     'noNotesYet' : MessageLookupByLibrary.simpleMessage('Belum ada catatan'),
-    'menu' : MessageLookupByLibrary.simpleMessage('Menu Penyakit'),
+    'menu' : MessageLookupByLibrary.simpleMessage('Ht.Co (Hypertension Control)'),
     'knowledge' : MessageLookupByLibrary.simpleMessage('Pengetahuan'),
     'recipe' : MessageLookupByLibrary.simpleMessage('Resep'),
     'manage' : MessageLookupByLibrary.simpleMessage('Kelola'),
@@ -215,6 +215,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'fatRequired': MessageLookupByLibrary.simpleMessage('Mohon masukkan kandungan lemak'),
     'proteinRequired': MessageLookupByLibrary.simpleMessage('Mohon masukkan kandungan protein'),
     'carbRequired' : MessageLookupByLibrary.simpleMessage('Mohon masukkan kandungan karbohidrat'),
+    'caloriesRequired' : MessageLookupByLibrary.simpleMessage('Mohon masukkan kalori'),
     'sugarRequired': MessageLookupByLibrary.simpleMessage('Mohon masukkan konten gula'),
     'cholesterolRequired' : MessageLookupByLibrary.simpleMessage('Mohon masukkan konten kolesterol'),
     'weightRequired' : MessageLookupByLibrary.simpleMessage('Mohon masukkan berat'),
@@ -242,6 +243,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'bloodPressureNoteTooShort': MessageLookupByLibrary.simpleMessage('Catatan tekanan darah minimal 4 karakter'),
     'exerciseTypeRequired': MessageLookupByLibrary.simpleMessage('Pilih jenis olahraga'),
     'medicineCountRequired': MessageLookupByLibrary.simpleMessage('Pilih jumlah obat per hari'),
+    'noDataAvailable' : MessageLookupByLibrary.simpleMessage('Tidak ada data'),
   };
 
 }

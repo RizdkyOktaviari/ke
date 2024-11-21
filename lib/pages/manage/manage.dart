@@ -5,15 +5,17 @@ import '../../helpers/providers/auth_provider.dart';
 import '../../helpers/providers/recipe_provider.dart';
 import '../../models/resep_model.dart';
 
-class ManagePage extends StatelessWidget {
+class ManagePage extends StatefulWidget {
   const ManagePage({Key? key}) : super(key: key);
 
   @override
+  State<ManagePage> createState() => _ManagePageState();
+}
+
+class _ManagePageState extends State<ManagePage> {
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => RecipeProvider(),
-      child: _ManagePageContent(),
-    );
+    return _ManagePageContent();
   }
 }
 
@@ -32,9 +34,11 @@ class _ManagePageContentState extends State<_ManagePageContent> {
   final _sugarController = TextEditingController();
   final _cholesterolController = TextEditingController();
   final _massController = TextEditingController();
+  final _calloriesController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String _selectedFoodType = 'breakfast';
-  final List<String> _foodTypes = ['breakfast', 'lunch', 'dinner', 'snacks'];
+  final List<String> _foodTypes = ['breakfast', 'lunch', 'dinner', 'snack'];
+
   void formatNumber(TextEditingController controller) {
     if (controller.text.isNotEmpty) {
       // Coba parse nilai sebagai double
@@ -63,12 +67,16 @@ class _ManagePageContentState extends State<_ManagePageContent> {
     // Try parsing as double
     return double.tryParse(value);
   }
-  String? validateNumericField(String? value, String fieldName, BuildContext context) {
+
+  String? validateNumericField(String? value, String fieldName,
+      BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
     if (value == null || value.isEmpty) {
       // Menggunakan pesan spesifik untuk setiap field
       switch (fieldName) {
+        case 'callories':
+          return localizations.caloriesRequired;
         case 'fat':
           return localizations.fatRequired;
         case 'protein':
@@ -101,6 +109,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
 
     return null;
   }
+
   Future<void> _saveRecipe() async {
     final localizations = AppLocalizations.of(context);
     try {
@@ -109,7 +118,9 @@ class _ManagePageContentState extends State<_ManagePageContent> {
         return;
       }
 
-      final token = Provider.of<AuthProvider>(context, listen: false).token;
+      final token = Provider
+          .of<AuthProvider>(context, listen: false)
+          .token;
       if (token == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(localizations!.notAuthenticated)),
@@ -118,7 +129,7 @@ class _ManagePageContentState extends State<_ManagePageContent> {
       }
 
       // Parse numeric values with validation
-      double? calories = parseNumericInput(_carbsController.text);
+      double? calories = parseNumericInput(_calloriesController.text);
       double? fat = parseNumericInput(_fatController.text);
       double? protein = parseNumericInput(_proteinController.text);
       double? carbs = parseNumericInput(_carbsController.text);
@@ -131,12 +142,12 @@ class _ManagePageContentState extends State<_ManagePageContent> {
         description: _descriptionController.text,
         foodType: _selectedFoodType,
         portion: _portionController.text,
-        calories: _carbsController.text,         // Gunakan text langsung
-        protein: _proteinController.text,        // Gunakan text langsung
-        fat: _fatController.text,                // Gunakan text langsung
-        carbohydrate: _carbsController.text,     // Gunakan text langsung
-        sugar: _sugarController.text,            // Gunakan text langsung
-        cholesterol: _cholesterolController.text, // Gunakan text langsung
+        calories: _calloriesController.text,
+        protein: _proteinController.text,
+        fat: _fatController.text,
+        carbohydrate: _carbsController.text,
+        sugar: _sugarController.text,
+        cholesterol: _cholesterolController.text,
         mass: _massController.text,
       );
 
@@ -150,7 +161,9 @@ class _ManagePageContentState extends State<_ManagePageContent> {
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(Provider.of<RecipeProvider>(context, listen: false).error)),
+          SnackBar(content: Text(Provider
+              .of<RecipeProvider>(context, listen: false)
+              .error)),
         );
       }
     } catch (e) {
@@ -165,255 +178,290 @@ class _ManagePageContentState extends State<_ManagePageContent> {
   Widget build(BuildContext context) {
     final recipeProvider = Provider.of<RecipeProvider>(context);
     final localizations = AppLocalizations.of(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          localizations!.addRecipePage,
-          style: const TextStyle(color: Colors.white),
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(
+            localizations!.addRecipePage,
+            style: const TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.blueAccent,
         ),
-        backgroundColor: Colors.blueAccent,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFormField(
-                  controller: _foodNameController,
-                  decoration: InputDecoration(
-                    labelText: localizations.foodName,
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return localizations.foodNameRequired;
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _descriptionController,
-                  decoration: InputDecoration(
-                    labelText: localizations.description,
-                    border: OutlineInputBorder(),
-                  ),
-                  maxLines: 3,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return localizations.descriptionRequired;
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _portionController,
-                  decoration: InputDecoration(
-                    labelText: localizations.portion,
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return localizations.portionRequired;
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                Text(localizations.foodType),
-                DropdownButtonFormField<String>(
-                  value: _selectedFoodType,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
-                  items: _foodTypes.map((String type) {
-                    return DropdownMenuItem<String>(
-                      value: type,
-                      child: Text(type.substring(0, 1).toUpperCase() + type.substring(1)),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    if (newValue != null) {
-                      setState(() {
-                        _selectedFoodType = newValue;
-                      });
-                    }
-                  },
-                ),
-                SizedBox(height: 16),
-                Text(localizations.fat),
-                TextFormField(
-                  controller: _fatController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '0',
-                  ),
-                    validator: (value) =>
-                    validateNumericField(value, 'fat', context),
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      formatNumber(_fatController);
-                    }
-                  },
-
-
-                ),
-                SizedBox(height: 16),
-                Text(localizations.protein),
-                TextFormField(
-                  controller: _proteinController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '0',
-                  ),
-                  validator: (value) =>
-                    validateNumericField(value, 'protein', context),
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      formatNumber(_proteinController);
-                    }
-                  },
-                ),
-                SizedBox(height: 16),
-                Text(localizations.carbohydrate),
-                TextFormField(
-                  controller: _carbsController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '0',
-                  ),
-                  validator: (value) =>
-                    validateNumericField(value, 'carbs', context),
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      formatNumber(_carbsController);
-                    }
-                  },
-
-                ),
-                SizedBox(height: 16),
-                Text(localizations.sugar),
-                TextFormField(
-                  controller: _sugarController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '0'
-                  ),
-                  validator:(value) =>
-                    validateNumericField(value, 'sugar', context),
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      formatNumber(_sugarController);
-                    }
-                  },
-                ),
-                SizedBox(height: 16),
-                Text(localizations.cholesterolInMg),
-                TextFormField(
-                  controller: _cholesterolController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '0',
-                  ),
-                  validator: (value) =>
-                    validateNumericField(value, 'cholesterol', context),
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      formatNumber(_cholesterolController);
-                    }
-                  },
-
-                ),
-                SizedBox(height: 16),
-                Text(localizations.weightInG),
-                TextFormField(
-                  controller: _massController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '0',
-                  ),
-                  validator: (value) =>
-                    validateNumericField(value, 'weight', context),
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      formatNumber(_massController);
-                    }
-                  },
-
-                ),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(5),
+        body: !authProvider.isAuthenticated
+            ? FutureBuilder(
+          future: authProvider.handleUnauthorized(context),
+          builder: (context, snapshot) => const SizedBox(),
+        )
+            : Consumer<RecipeProvider>(
+            builder: (context, recipeProvider, _) {
+              return Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          controller: _foodNameController,
+                          decoration: InputDecoration(
+                            labelText: localizations.foodName,
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return localizations.foodNameRequired;
+                            }
+                            return null;
+                          },
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            recipeProvider.fileName.isEmpty
-                                ? localizations.noFileChosen
-                                : recipeProvider.fileName,
-                            style: TextStyle(fontSize: 16),
-                            overflow: TextOverflow.ellipsis,
+                        SizedBox(height: 16),
+                        TextFormField(
+                          controller: _descriptionController,
+                          decoration: InputDecoration(
+                            labelText: localizations.description,
+                            border: OutlineInputBorder(),
+                          ),
+                          maxLines: 3,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return localizations.descriptionRequired;
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        TextFormField(
+                          controller: _portionController,
+                          decoration: InputDecoration(
+                            labelText: localizations.portion,
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return localizations.portionRequired;
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        TextFormField(
+                          controller: _calloriesController,
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true),
+                          decoration: InputDecoration(
+                            labelText: localizations.calories,
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return localizations.caloriesRequired;
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        Text(localizations.foodType),
+                        DropdownButtonFormField<String>(
+                          value: _selectedFoodType,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                          items: _foodTypes.map((String type) {
+                            return DropdownMenuItem<String>(
+                              value: type,
+                              child: Text(type.substring(0, 1).toUpperCase() +
+                                  type.substring(1)),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            if (newValue != null) {
+                              setState(() {
+                                _selectedFoodType = newValue;
+                              });
+                            }
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        Text(localizations.fat),
+                        TextFormField(
+                          controller: _fatController,
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: '0',
+                          ),
+                          validator: (value) =>
+                              validateNumericField(value, 'fat', context),
+                          // onChanged: (value) {
+                          //   if (value.isNotEmpty) {
+                          //     formatNumber(_fatController);
+                          //   }
+                          // },
+
+
+                        ),
+                        SizedBox(height: 16),
+                        Text(localizations.protein),
+                        TextFormField(
+                          controller: _proteinController,
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: '0',
+                          ),
+                          validator: (value) =>
+                              validateNumericField(value, 'protein', context),
+                          // onChanged: (value) {
+                          //   if (value.isNotEmpty) {
+                          //     formatNumber(_proteinController);
+                          //   }
+                          // },
+                        ),
+                        SizedBox(height: 16),
+                        Text(localizations.carbohydrate),
+                        TextFormField(
+                          controller: _carbsController,
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: '0',
+                          ),
+                          validator: (value) =>
+                              validateNumericField(value, 'carbs', context),
+                          // onChanged: (value) {
+                          //   if (value.isNotEmpty) {
+                          //     formatNumber(_carbsController);
+                          //   }
+                          // },
+
+                        ),
+                        SizedBox(height: 16),
+                        Text(localizations.sugar),
+                        TextFormField(
+                          controller: _sugarController,
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true),
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: '0'
+                          ),
+                          validator: (value) =>
+                              validateNumericField(value, 'sugar', context),
+                          // onChanged: (value) {
+                          //   if (value.isNotEmpty) {
+                          //     formatNumber(_sugarController);
+                          //   }
+                          // },
+                        ),
+                        SizedBox(height: 16),
+                        Text(localizations.cholesterolInMg),
+                        TextFormField(
+                          controller: _cholesterolController,
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: '0',
+                          ),
+                          validator: (value) =>
+                              validateNumericField(
+                                  value, 'cholesterol', context),
+                          // onChanged: (value) {
+                          //   if (value.isNotEmpty) {
+                          //     formatNumber(_cholesterolController);
+                          //   }
+                          // },
+
+                        ),
+                        SizedBox(height: 16),
+                        Text(localizations.weightInG),
+                        TextFormField(
+                          controller: _massController,
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: '0',
+                          ),
+                          validator: (value) =>
+                              validateNumericField(value, 'weight', context),
+                          // onChanged: (value) {
+                          //   if (value.isNotEmpty) {
+                          //     formatNumber(_massController);
+                          //   }
+                          // },
+
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Text(
+                                    recipeProvider.fileName.isEmpty
+                                        ? localizations.noFileChosen
+                                        : recipeProvider.fileName,
+                                    style: TextStyle(fontSize: 16),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            ElevatedButton(
+                              onPressed: recipeProvider.getImage,
+                              child: Text(localizations.chooseFile),
+                            ),
+                          ],
+                        ),
+                        if (recipeProvider.image != null)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            child: Image.file(
+                                recipeProvider.image!, height: 200),
+                          ),
+                        SizedBox(height: 20),
+                        Center(
+                          child: recipeProvider.isLoading
+                              ? CircularProgressIndicator()
+                              : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueAccent,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 40,
+                                vertical: 15,
+                              ),
+                            ),
+                            onPressed: _saveRecipe,
+                            child: Text(
+                              localizations.save,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: recipeProvider.getImage,
-                      child: Text(localizations.chooseFile),
-                    ),
-                  ],
-                ),
-                if (recipeProvider.image != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Image.file(recipeProvider.image!, height: 200),
-                  ),
-                SizedBox(height: 20),
-                Center(
-                  child: recipeProvider.isLoading
-                      ? CircularProgressIndicator()
-                      : ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 40,
-                        vertical: 15,
-                      ),
-                    ),
-                    onPressed: _saveRecipe,
-                    child: Text(
-                      localizations.save,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+
+              );
+            }));
   }
 
   @override

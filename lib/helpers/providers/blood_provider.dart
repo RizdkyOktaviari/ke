@@ -1,12 +1,21 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../../models/blood_model.dart';
+import 'auth_provider.dart';
+import 'basic_provider.dart';
 
-class BloodPressureProvider with ChangeNotifier {
+class BloodPressureProvider extends BaseProvider {
   bool _isLoading = false;
   String? _error;
+
+  BloodPressureProvider({
+    required AuthProvider authProvider,
+    required BuildContext context,
+  }) : super(authProvider, context);
+
 
   bool get isLoading => _isLoading;
   String? get error => _error;
@@ -28,6 +37,9 @@ class BloodPressureProvider with ChangeNotifier {
       );
 
       final data = json.decode(response.body);
+      if (!await handleApiResponse(response)) {
+        return false;
+      }
 
       if (response.statusCode == 200 && data['status'] == true) {
         _isLoading = false;
@@ -46,5 +58,11 @@ class BloodPressureProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  @override
+  void reset() {
+    setLoading(false);
+    setError(null);
   }
 }
