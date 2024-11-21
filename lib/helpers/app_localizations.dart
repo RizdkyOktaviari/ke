@@ -210,7 +210,7 @@ class AppLocalizations {
   String get oz => Intl.message('oz', name: 'oz');
   String get notes => Intl.message('Notes', name: 'notes');
   String get noNotesYet => Intl.message('No notes yet', name: 'noNotesYet');
-  String get menu => Intl.message('Menu', name: 'menu');
+  String get menu => Intl.message('Ht.Co (Hypertension Control)', name: 'menu');
   String get knowledge => Intl.message('Knowledge', name: 'knowledge');
   String get recipe => Intl.message('Recipe', name: 'recipe');
   String get manage => Intl.message('Manage', name: 'manage');
@@ -730,6 +730,10 @@ class AppLocalizations {
     'Please enter portion',
     name: 'portionRequired',
   );
+  String get caloriesRequired => Intl.message(
+    'Please enter portion',
+    name: 'caloriesRequired',
+  );
 
   String get fatRequired => Intl.message(
     'Please enter fat content',
@@ -861,6 +865,10 @@ class AppLocalizations {
   String get medicineCountRequired => Intl.message(
     'Please select medicine count',
     name: 'medicineCountRequired',
+  );
+  String get noDataAvailable => Intl.message(
+    'No data available',
+    name: 'noDataAvailable',
   );
 
   get required => null;
